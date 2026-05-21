@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="aim_background_light">#FFFAF7F2</color>
+    <color name="aim_background_dark">#FF12110F</color>
+    <color name="aim_primary">#FFEC6A3C</color>
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aim</string>
+
+    <string name="bottom_today">Сегодня</string>
+    <string name="bottom_goals">Цели</string>
+    <string name="bottom_habits">Привычки</string>
+    <string name="bottom_dashboard">Дашборд</string>
+
+    <string name="today_title">Сегодня</string>
+    <string name="today_empty_title">Сегодня — чистый лист</string>
+    <string name="today_empty_subtitle">Запланируй задачу или отметь привычку, и она появится здесь.</string>
+
+    <string name="goals_title">Цели</string>
+    <string name="goals_empty_title">Пока ни одной цели</string>
+    <string name="goals_empty_subtitle">Сформулируй то, к чему хочешь прийти. Большие цели разобьём на задачи и подзадачи.</string>
+    <string name="goals_fab_create">Новая цель</string>
+
+    <string name="habits_title">Привычки</string>
+    <string name="habits_empty_title">Тут будут твои привычки</string>
+    <string name="habits_empty_subtitle">Что хочешь оставить позади? Начни с одной — этого достаточно.</string>
+    <string name="habits_fab_create">Новая привычка</string>
+
+    <string name="dashboard_title">Дашборд</string>
+    <string name="dashboard_empty_title">Графики появятся позже</string>
+    <string name="dashboard_empty_subtitle">Когда накопятся данные о задачах и привычках, здесь будут стрики, тепловые карты и прогресс.</string>
+
+    <string name="settings_title">Настройки</string>
+    <string name="settings_section_appearance">Внешний вид</string>
+    <string name="settings_theme_title">Тема оформления</string>
+    <string name="settings_theme_system">Как в системе</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_dark">Тёмная</string>
+
+    <string name="action_settings">Настройки</string>
+    <string name="action_back">Назад</string>
+</resources>
