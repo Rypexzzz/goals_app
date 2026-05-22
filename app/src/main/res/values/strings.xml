@@ -142,11 +142,44 @@
     <string name="settings_open_archive">Архив целей</string>
     <string name="settings_open_trash">Корзина</string>
 
-    <!-- Habits / Dashboard placeholders -->
+    <!-- Habits -->
     <string name="habits_title">Привычки</string>
     <string name="habits_empty_title">Тут будут твои привычки</string>
     <string name="habits_empty_subtitle">Что хочешь оставить позади? Начни с одной — этого достаточно.</string>
     <string name="habits_fab_create">Новая привычка</string>
+
+    <!-- Habit edit form -->
+    <string name="habit_edit_title_new">Новая привычка</string>
+    <string name="habit_edit_title_existing">Редактировать привычку</string>
+    <string name="habit_edit_field_title">Название</string>
+    <string name="habit_edit_field_title_hint">От чего воздерживаешься?</string>
+    <string name="habit_edit_field_description">Описание</string>
+    <string name="habit_edit_field_description_hint">Контекст, мотивация, заметки.</string>
+    <string name="habit_edit_field_frequency">Частота</string>
+    <string name="habit_edit_action_save">Сохранить</string>
+    <string name="habit_frequency_daily">Каждый день</string>
+    <string name="habit_frequency_times_per_week">Раз в неделю</string>
+    <string name="habit_frequency_times_per_month">Раз в месяц</string>
+    <string name="habit_frequency_specific_days">Конкретные дни</string>
+    <string name="habit_frequency_times_suffix_week">раз в неделю</string>
+    <string name="habit_frequency_times_suffix_month">раз в месяц</string>
+
+    <!-- Habit detail -->
+    <string name="habit_detail_delete_title">Удалить привычку?</string>
+    <string name="habit_detail_delete_message">Привычка вместе со всеми отметками попадёт в корзину и удалится через 30 дней.</string>
+    <string name="habit_stat_current_streak">Текущий стрик</string>
+    <string name="habit_stat_best_streak">Лучший</string>
+    <string name="habit_stat_completion">Выполнено</string>
+    <string name="habit_action_done_today">Воздержался</string>
+    <string name="habit_action_failed_today">Сорвался</string>
+    <string name="habit_action_edit">Редактировать</string>
+    <string name="habit_action_archive">Архивировать</string>
+    <string name="habit_action_delete">Удалить</string>
+
+    <!-- Goal detail — Habits section -->
+    <string name="goal_detail_section_habits">Привычки цели</string>
+    <string name="goal_detail_add_habit">Привязать привычку</string>
+    <string name="goal_detail_no_habits">Привычки добавляются для целей вроде «бросить курить» или «читать каждый день».</string>
 
     <string name="dashboard_title">Дашборд</string>
     <string name="dashboard_empty_title">Графики появятся позже</string>

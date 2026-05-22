@@ -4,6 +4,29 @@
 
 ## [Unreleased]
 
+### Added — Sprint 3: Привычки
+
+- **Database v2** — миграция v1 → v2: новые таблицы `habits` и `habit_check_ins` с индексами (date, habit_id+date unique), FK на goals с `ON DELETE SET NULL` и на habits с `ON DELETE CASCADE`. Schema-снапшот в `app/schemas/`.
+- **Domain слой:** модели `Habit`, `HabitCheckIn`, `HabitStats`, `CheckInStatus`, `HabitFrequency` (sealed: Daily / TimesPerWeek(n) / TimesPerMonth(n) / SpecificDays(days)). Кастомный `DayOfWeekSerializer` для kotlinx.serialization.
+- **Repository:** `HabitRepositoryImpl` — CRUD привычек + check-ins upsert/delete + наблюдение по диапазону дат для календаря.
+- **15 UseCase'ов** (CRUD + check-in/uncheck + ObserveCheckIns + ObserveHabitsForGoal + Archive/Restore/Delete) + **`CalculateStreakUseCase`** — чистая функция для **четырёх типов** `HabitFrequency`, с current и best streak метриками.
+- **`GetHabitStatsUseCase`** — комбинирует streak + total counts + % выполнения относительно дедлайна привязанной цели.
+- **UI-компонент `AimHabitCalendar`** — месячный календарь с HorizontalPager между месяцами, кружки с цветами по статусу (DONE/FAILED/none), обводка сегодняшнего дня с пружинной анимацией.
+- **Экраны:**
+  - `HabitsScreen` — список с эмодзи, частотой и значком стрика 🔥, FAB «Новая привычка».
+  - `HabitDetailScreen` — большая шапка со статистикой (текущий/лучший стрик, % выполнения), квик-кнопки «Воздержался» / «Сорвался», календарь с тапом по дню для смены отметки (циклически: нет → DONE → FAILED → нет), меню (редактировать / архив / удалить).
+  - `HabitEditBottomSheet` — Hilt assisted injection (`@HiltViewModel(assistedFactory = ...)`), выбор `HabitFrequency` чипами с под-конфигурацией: для TimesPer{Week,Month} — `+/−` контрол, для SpecificDays — переключение дней недели через локализованные пилюли.
+- **Связь с целью:** в `GoalDetailScreen` под деревом задач появилась секция «Привычки цели» — горизонтальный список привычек с тапом для перехода и кнопкой «Привязать привычку».
+- **Навигация:** `AimRoute.HabitDetail(habitId)`, slide-анимация push-destination.
+- **Тесты:** `CalculateStreakUseCaseTest` — 14 кейсов с покрытием всех 4 видов частоты + edge cases (FAILED ломает streak, пропуски не ломают Daily, неделя успешна без FAILED даже при done < n). `HabitMapperTest` — roundtrip для каждого варианта HabitFrequency + fallback при битом JSON.
+
+### Notes
+
+- Все привычки **негативные** (воздержание) — UX-тексты: «Воздержался» / «Сорвался», README §6.3.
+- Стрик-логика по README §6.3 точно: missing-день не ломает Daily, неделя с `failed ≥ 1 AND done < n` ломает TimesPerWeek, SpecificDays требует все заданные дни как DONE.
+- Тап по дню в календаре циклически переключает: нет → DONE → FAILED → нет.
+- При архивировании цели её привязанные привычки остаются (FK `ON DELETE SET NULL` не срабатывает при soft delete) — связь сохраняется через `habits.goal_id`.
+
 ### Added — Sprint 2: Цели и задачи (CRUD)
 
 - **Room 2.6.1** — `AimDatabase` (v1) с таблицами `goals` и `tasks` (self-FK), индексы по deleted_at / status / order_index, FK с ON DELETE CASCADE. Type-конвертер для `Recurrence` через kotlinx.serialization JSON. Schema-экспорт в `app/schemas/`.

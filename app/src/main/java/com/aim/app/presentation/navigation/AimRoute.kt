@@ -30,6 +30,9 @@ sealed interface AimRoute {
     data class TaskDetail(val taskId: Long) : AimRoute
 
     @Serializable
+    data class HabitDetail(val habitId: Long) : AimRoute
+
+    @Serializable
     data object Trash : AimRoute
 
     @Serializable

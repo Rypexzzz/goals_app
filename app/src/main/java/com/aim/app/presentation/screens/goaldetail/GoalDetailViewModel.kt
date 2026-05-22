@@ -12,6 +12,7 @@ import com.aim.app.domain.usecase.goal.CompleteGoalUseCase
 import com.aim.app.domain.usecase.goal.ObserveGoalUseCase
 import com.aim.app.domain.usecase.goal.SoftDeleteGoalUseCase
 import com.aim.app.domain.usecase.goal.UncompleteGoalUseCase
+import com.aim.app.domain.usecase.habit.ObserveHabitsForGoalUseCase
 import com.aim.app.domain.usecase.task.CompleteTaskUseCase
 import com.aim.app.domain.usecase.task.ObserveTasksForGoalUseCase
 import com.aim.app.domain.usecase.task.ReorderTasksUseCase
@@ -19,10 +20,10 @@ import com.aim.app.domain.usecase.task.SoftDeleteTaskUseCase
 import com.aim.app.domain.usecase.task.UncompleteTaskUseCase
 import com.aim.app.presentation.navigation.AimRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,6 +34,7 @@ class GoalDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     observeGoal: ObserveGoalUseCase,
     observeTasksForGoal: ObserveTasksForGoalUseCase,
+    observeHabitsForGoal: ObserveHabitsForGoalUseCase,
     private val softDeleteGoal: SoftDeleteGoalUseCase,
     private val archiveGoal: ArchiveGoalUseCase,
     private val completeGoal: CompleteGoalUseCase,
@@ -52,9 +54,10 @@ class GoalDetailViewModel @Inject constructor(
     val uiState: StateFlow<GoalDetailUiState> = combine(
         observeGoal(goalId),
         observeTasksForGoal(goalId),
+        observeHabitsForGoal(goalId),
         expandedIds,
         dialogs,
-    ) { goal, roots, expanded, dialog ->
+    ) { goal, roots, habits, expanded, dialog ->
         if (goal == null) {
             GoalDetailUiState(isLoading = false, finished = true)
         } else {
@@ -63,6 +66,7 @@ class GoalDetailViewModel @Inject constructor(
                 goal = goal,
                 taskRoots = roots,
                 expandedTaskIds = expanded,
+                linkedHabits = habits,
                 pendingTasks = roots.flatMap { it.allTasks() }
                     .filter { it.status == TaskStatus.IN_PROGRESS },
                 confirmDelete = dialog.deleteOpen,

@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.aim.app.data.local.db.AimDatabase
 import com.aim.app.data.local.db.GoalDao
+import com.aim.app.data.local.db.HabitDao
+import com.aim.app.data.local.db.MIGRATION_1_2
 import com.aim.app.data.local.db.TaskDao
 import dagger.Module
 import dagger.Provides
@@ -24,11 +26,16 @@ object DatabaseModule {
         context = context,
         klass = AimDatabase::class.java,
         name = AimDatabase.NAME,
-    ).build()
+    )
+        .addMigrations(MIGRATION_1_2)
+        .build()
 
     @Provides
     fun provideGoalDao(db: AimDatabase): GoalDao = db.goalDao()
 
     @Provides
     fun provideTaskDao(db: AimDatabase): TaskDao = db.taskDao()
+
+    @Provides
+    fun provideHabitDao(db: AimDatabase): HabitDao = db.habitDao()
 }
