@@ -2,20 +2,147 @@
 <resources>
     <string name="app_name">Aim</string>
 
+    <!-- Bottom navigation -->
     <string name="bottom_today">Сегодня</string>
     <string name="bottom_goals">Цели</string>
     <string name="bottom_habits">Привычки</string>
     <string name="bottom_dashboard">Дашборд</string>
 
+    <!-- Today screen -->
     <string name="today_title">Сегодня</string>
     <string name="today_empty_title">Сегодня — чистый лист</string>
     <string name="today_empty_subtitle">Запланируй задачу или отметь привычку, и она появится здесь.</string>
 
+    <!-- Goals: list & filters -->
     <string name="goals_title">Цели</string>
-    <string name="goals_empty_title">Пока ни одной цели</string>
-    <string name="goals_empty_subtitle">Сформулируй то, к чему хочешь прийти. Большие цели разобьём на задачи и подзадачи.</string>
     <string name="goals_fab_create">Новая цель</string>
+    <string name="goals_filter_all">Все</string>
+    <string name="goals_filter_active">Активные</string>
+    <string name="goals_filter_completed">Завершённые</string>
+    <string name="goals_filter_archived">Архивные</string>
+    <string name="goals_menu_archive">Архив</string>
+    <string name="goals_menu_trash">Корзина</string>
+    <string name="goals_card_completed">Завершена</string>
 
+    <!-- Goals: empty states per filter -->
+    <string name="goals_empty_all_title">Здесь будут все ваши цели</string>
+    <string name="goals_empty_all_subtitle">Активные, завершённые и архивные — в одном списке. Начните с создания первой цели.</string>
+    <string name="goals_empty_active_title">Пока ни одной активной цели</string>
+    <string name="goals_empty_active_subtitle">Сформулируй то, к чему хочешь прийти. Большие цели разобьём на задачи и подзадачи.</string>
+    <string name="goals_empty_completed_title">Ещё ни одна цель не завершена</string>
+    <string name="goals_empty_completed_subtitle">Когда отметишь цель завершённой — она будет здесь, как небольшой памятник.</string>
+    <string name="goals_empty_archived_title">Архив пуст</string>
+    <string name="goals_empty_archived_subtitle">Архивированные цели хранятся здесь — без шума в основном списке, но всегда под рукой.</string>
+
+    <!-- Goal detail -->
+    <string name="goal_detail_section_tasks">Задачи</string>
+    <string name="goal_detail_add_task">Добавить задачу</string>
+    <string name="goal_detail_no_tasks_title">Без задач цель — это просто желание</string>
+    <string name="goal_detail_no_tasks_subtitle">Разбей цель на шаги — даже один первый шаг сильно приближает.</string>
+    <string name="goal_detail_action_edit">Редактировать</string>
+    <string name="goal_detail_action_complete">Отметить выполненной</string>
+    <string name="goal_detail_action_uncomplete">Вернуть в активные</string>
+    <string name="goal_detail_action_archive">Архивировать</string>
+    <string name="goal_detail_action_delete">Удалить</string>
+    <string name="goal_detail_delete_title">Удалить цель?</string>
+    <string name="goal_detail_delete_message">Цель попадёт в корзину и удалится через 30 дней. Восстановить можно из «Настройки → Корзина».</string>
+    <string name="goal_detail_complete_with_children_title">Также отметить задачи?</string>
+    <string name="goal_detail_complete_with_children_message">Внутри цели остались незавершённые задачи. Отметить их как выполненные?</string>
+    <string name="goal_detail_complete_only">Только цель</string>
+    <string name="goal_detail_complete_all">И задачи</string>
+    <string name="goal_detail_section_description">Описание</string>
+    <string name="goal_detail_deadline_label">Дедлайн</string>
+
+    <!-- Goal edit -->
+    <string name="goal_edit_title_new">Новая цель</string>
+    <string name="goal_edit_title_existing">Редактировать цель</string>
+    <string name="goal_edit_field_title">Название</string>
+    <string name="goal_edit_field_title_hint">К чему стремишься?</string>
+    <string name="goal_edit_field_description">Описание</string>
+    <string name="goal_edit_field_description_hint">Markdown поддерживается. Зачем эта цель, что ждёт в конце?</string>
+    <string name="goal_edit_field_emoji">Эмодзи</string>
+    <string name="goal_edit_field_deadline">Дедлайн</string>
+    <string name="goal_edit_field_no_deadline">Без дедлайна</string>
+    <string name="goal_edit_action_save">Сохранить</string>
+    <string name="goal_edit_action_clear_deadline">Убрать дедлайн</string>
+
+    <!-- Task detail -->
+    <string name="task_detail_section_subtasks">Подзадачи</string>
+    <string name="task_detail_add_subtask">Добавить подзадачу</string>
+    <string name="task_detail_no_subtasks_title">Подзадач пока нет</string>
+    <string name="task_detail_no_subtasks_subtitle">Если задача большая — разбей её на ещё более мелкие шаги.</string>
+    <string name="task_detail_max_depth_reached">Глубина 5 — это уже последний уровень. Дальше — только выполнять.</string>
+    <string name="task_detail_action_edit">Редактировать</string>
+    <string name="task_detail_action_complete">Отметить выполненной</string>
+    <string name="task_detail_action_uncomplete">Вернуть в работу</string>
+    <string name="task_detail_action_delete">Удалить</string>
+    <string name="task_detail_section_description">Описание</string>
+    <string name="task_detail_section_schedule">Расписание</string>
+    <string name="task_detail_scheduled_for_label">Запланирована на</string>
+    <string name="task_detail_scheduled_time_label">Время</string>
+    <string name="task_detail_deadline_label">Дедлайн</string>
+    <string name="task_detail_recurrence_label">Повторяемость</string>
+
+    <!-- Task edit -->
+    <string name="task_edit_title_new">Новая задача</string>
+    <string name="task_edit_title_existing">Редактировать задачу</string>
+    <string name="task_edit_field_title">Название</string>
+    <string name="task_edit_field_title_hint">Что нужно сделать?</string>
+    <string name="task_edit_field_description">Описание</string>
+    <string name="task_edit_field_description_hint">Контекст, ссылки, заметки.</string>
+    <string name="task_edit_field_scheduled_for">Запланирована на</string>
+    <string name="task_edit_field_scheduled_time">Время</string>
+    <string name="task_edit_field_deadline">Дедлайн</string>
+    <string name="task_edit_field_recurrence">Повторение</string>
+    <string name="task_edit_recurrence_none">Без повторения</string>
+    <string name="task_edit_recurrence_daily">Каждый день</string>
+    <string name="task_edit_recurrence_weekly">Каждую неделю</string>
+    <string name="task_edit_recurrence_monthly">Каждый месяц</string>
+    <string name="task_edit_action_save">Сохранить</string>
+
+    <!-- Task tree actions -->
+    <string name="task_action_add_subtask">Добавить подзадачу</string>
+    <string name="task_action_more">Меню задачи</string>
+    <string name="task_action_reorder">Перетащить</string>
+    <string name="task_action_complete">Выполнено</string>
+    <string name="task_action_uncomplete">В работе</string>
+    <string name="task_action_edit">Редактировать</string>
+    <string name="task_action_delete">Удалить</string>
+
+    <!-- Trash -->
+    <string name="trash_title">Корзина</string>
+    <string name="trash_empty_title">Корзина пуста</string>
+    <string name="trash_empty_subtitle">Удалённые цели и задачи хранятся здесь 30 дней — после этого исчезают навсегда.</string>
+    <string name="trash_action_restore">Восстановить</string>
+    <string name="trash_action_delete_forever">Удалить навсегда</string>
+    <string name="trash_action_empty">Очистить всё</string>
+    <string name="trash_empty_confirm_title">Очистить корзину?</string>
+    <string name="trash_empty_confirm_message">Все элементы будут удалены навсегда. Действие необратимо.</string>
+    <string name="trash_delete_forever_title">Удалить навсегда?</string>
+    <string name="trash_delete_forever_message">Эту запись нельзя будет восстановить.</string>
+    <string name="trash_type_goal">Цель</string>
+    <string name="trash_type_task">Задача</string>
+    <string name="trash_in_goal">Из цели «%1$s»</string>
+
+    <!-- Archive -->
+    <string name="archive_title">Архив</string>
+    <string name="archive_empty_title">Архив пуст</string>
+    <string name="archive_empty_subtitle">Архивированные цели хранятся отдельно, чтобы не мешать активному списку. Восстанови их в любой момент.</string>
+    <string name="archive_action_unarchive">Вернуть из архива</string>
+    <string name="archive_action_delete">Удалить</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Настройки</string>
+    <string name="settings_section_appearance">Внешний вид</string>
+    <string name="settings_section_data">Данные</string>
+    <string name="settings_theme_title">Тема оформления</string>
+    <string name="settings_theme_system">Как в системе</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_dark">Тёмная</string>
+    <string name="settings_open_archive">Архив целей</string>
+    <string name="settings_open_trash">Корзина</string>
+
+    <!-- Habits / Dashboard placeholders -->
     <string name="habits_title">Привычки</string>
     <string name="habits_empty_title">Тут будут твои привычки</string>
     <string name="habits_empty_subtitle">Что хочешь оставить позади? Начни с одной — этого достаточно.</string>
@@ -25,13 +152,29 @@
     <string name="dashboard_empty_title">Графики появятся позже</string>
     <string name="dashboard_empty_subtitle">Когда накопятся данные о задачах и привычках, здесь будут стрики, тепловые карты и прогресс.</string>
 
-    <string name="settings_title">Настройки</string>
-    <string name="settings_section_appearance">Внешний вид</string>
-    <string name="settings_theme_title">Тема оформления</string>
-    <string name="settings_theme_system">Как в системе</string>
-    <string name="settings_theme_light">Светлая</string>
-    <string name="settings_theme_dark">Тёмная</string>
-
+    <!-- Generic actions -->
     <string name="action_settings">Настройки</string>
     <string name="action_back">Назад</string>
+    <string name="action_close">Закрыть</string>
+    <string name="action_more">Ещё</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_apply">Применить</string>
+    <string name="action_confirm">Подтвердить</string>
+    <string name="action_save">Сохранить</string>
+
+    <!-- Emoji picker -->
+    <string name="emoji_picker_title">Эмодзи</string>
+    <string name="emoji_category_goals">Цели</string>
+    <string name="emoji_category_body">Тело</string>
+    <string name="emoji_category_mind">Ум</string>
+    <string name="emoji_category_work">Работа</string>
+    <string name="emoji_category_home">Дом</string>
+    <string name="emoji_category_money">Финансы</string>
+    <string name="emoji_category_lifestyle">Образ жизни</string>
+    <string name="emoji_category_relations">Отношения</string>
+
+    <!-- Markdown editor -->
+    <string name="markdown_edit">Редактировать</string>
+    <string name="markdown_preview">Превью</string>
+    <string name="markdown_empty_preview">_Пусто — переключись в режим редактирования._</string>
 </resources>

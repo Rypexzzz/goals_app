@@ -3,11 +3,8 @@ package com.aim.app.presentation.navigation
 import kotlinx.serialization.Serializable
 
 /**
- * Корневая иерархия типизированных маршрутов приложения.
- *
- * В Sprint 1 определены только верхнеуровневые экраны. Детальные маршруты
- * (`GoalDetail(goalId)`, `TaskDetail(taskId)` и т.д.) добавляются по мере появления
- * экранов в последующих спринтах.
+ * Корневая иерархия типизированных маршрутов приложения. В Sprint 2 добавлены
+ * детальные экраны цели/задачи плюс корзина и архив.
  */
 sealed interface AimRoute {
 
@@ -25,4 +22,16 @@ sealed interface AimRoute {
 
     @Serializable
     data object Settings : AimRoute
+
+    @Serializable
+    data class GoalDetail(val goalId: Long) : AimRoute
+
+    @Serializable
+    data class TaskDetail(val taskId: Long) : AimRoute
+
+    @Serializable
+    data object Trash : AimRoute
+
+    @Serializable
+    data object Archive : AimRoute
 }

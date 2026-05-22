@@ -1,0 +1,128 @@
+package com.aim.app.data.repository
+
+import androidx.room.withTransaction
+import com.aim.app.data.local.db.AimDatabase
+import com.aim.app.data.local.db.TaskDao
+import com.aim.app.data.mapper.toDomain
+import com.aim.app.data.mapper.toEntity
+import com.aim.app.domain.model.Task
+import com.aim.app.domain.repository.TaskRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import java.time.Instant
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class TaskRepositoryImpl @Inject constructor(
+    private val database: AimDatabase,
+    private val dao: TaskDao,
+    private val clock: () -> Instant = Instant::now,
+) : TaskRepository {
+
+    override fun observeActiveTasksForGoal(goalId: Long): Flow<List<Task>> =
+        dao.observeForGoal(goalId).map { list -> list.map { it.toDomain() } }
+
+    override fun observeTask(id: Long): Flow<Task?> =
+        dao.observeById(id).map { it?.toDomain() }
+
+    override fun observeTrashedTasks(): Flow<List<Task>> =
+        dao.observeTrashed().map { list -> list.map { it.toDomain() } }
+
+    override suspend fun createTask(task: Task): Long = database.withTransaction {
+        val parentDepth = task.parentTaskId?.let { parentId ->
+            requireNotNull(dao.getById(parentId)) { "Parent task $parentId not found" }.depth
+        } ?: -1
+        val newDepth = parentDepth + 1
+        check(newDepth <= Task.MAX_DEPTH) {
+            "Maximum task depth ${Task.MAX_DEPTH + 1} exceeded"
+        }
+        val nextOrder = dao.maxOrderIndex(task.goalId, task.parentTaskId) + 1
+        val entity = task
+            .copy(depth = newDepth, orderIndex = nextOrder)
+            .toEntity()
+            .copy(id = 0)
+        dao.insert(entity)
+    }
+
+    override suspend fun updateTask(task: Task) {
+        dao.update(task.toEntity())
+    }
+
+    override suspend fun softDelete(taskId: Long) {
+        dao.markDeleted(taskId, clock().toEpochMilli())
+    }
+
+    override suspend fun restoreFromTrash(taskId: Long) {
+        dao.clearDeleted(taskId)
+    }
+
+    override suspend fun markCompleted(taskId: Long) {
+        dao.markCompleted(taskId, clock().toEpochMilli())
+    }
+
+    override suspend fun markInProgress(taskId: Long) {
+        dao.markInProgress(taskId)
+    }
+
+    override suspend fun moveTask(taskId: Long, newParentId: Long?, newGoalId: Long) {
+        database.withTransaction {
+            val task = requireNotNull(dao.getById(taskId)) { "Task $taskId not found" }
+
+            val newParentDepth = newParentId?.let { parentId ->
+                check(parentId != taskId) { "Task cannot be its own parent" }
+                val subtreeIds = dao.getSubtreeIds(taskId).toSet()
+                check(parentId !in subtreeIds) {
+                    "Cannot move task into its own descendant (cycle)"
+                }
+                requireNotNull(dao.getById(parentId)) { "Parent task $parentId not found" }.depth
+            } ?: -1
+            val newDepth = newParentDepth + 1
+
+            val subtreeMaxDepth = computeSubtreeMaxDepth(taskId, task.depth)
+            val subtreeHeight = subtreeMaxDepth - task.depth
+            check(newDepth + subtreeHeight <= Task.MAX_DEPTH) {
+                "Move would exceed max depth ${Task.MAX_DEPTH + 1}"
+            }
+
+            val nextOrder = dao.maxOrderIndex(newGoalId, newParentId) + 1
+            dao.moveTask(
+                id = taskId,
+                newParentId = newParentId,
+                newGoalId = newGoalId,
+                newDepth = newDepth,
+                newOrder = nextOrder,
+            )
+            shiftDescendantDepths(taskId, delta = newDepth - task.depth, newGoalId = newGoalId)
+        }
+    }
+
+    override suspend fun reorder(parentTaskId: Long?, goalId: Long, orderedIds: List<Long>) {
+        dao.reorderInParent(orderedIds)
+    }
+
+    override suspend fun permanentlyDelete(taskId: Long) {
+        dao.deleteById(taskId)
+    }
+
+    override suspend fun getSubtreeIds(taskId: Long): Set<Long> =
+        dao.getSubtreeIds(taskId).toSet()
+
+    private suspend fun computeSubtreeMaxDepth(rootId: Long, rootDepth: Int): Int {
+        val ids = dao.getSubtreeIds(rootId)
+        var max = rootDepth
+        ids.forEach { id ->
+            dao.getById(id)?.let { if (it.depth > max) max = it.depth }
+        }
+        return max
+    }
+
+    private suspend fun shiftDescendantDepths(rootId: Long, delta: Int, newGoalId: Long) {
+        if (delta == 0) return
+        val ids = dao.getSubtreeIds(rootId).filter { it != rootId }
+        ids.forEach { id ->
+            val entity = dao.getById(id) ?: return@forEach
+            dao.update(entity.copy(depth = entity.depth + delta, goalId = newGoalId))
+        }
+    }
+}
