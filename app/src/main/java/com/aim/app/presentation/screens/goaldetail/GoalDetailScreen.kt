@@ -1,5 +1,7 @@
 package com.aim.app.presentation.screens.goaldetail
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.draw.clip
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TextButton
+import com.aim.app.domain.model.Habit
+import com.aim.app.presentation.screens.habitedit.HabitEditBottomSheet
+import com.aim.app.presentation.screens.habitedit.HabitEditMode
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Add
@@ -64,6 +72,7 @@ import java.util.Locale
 fun GoalDetailScreen(
     onBack: () -> Unit,
     onOpenTask: (Long) -> Unit,
+    onOpenHabit: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GoalDetailViewModel = hiltViewModel(),
 ) {
@@ -78,6 +87,7 @@ fun GoalDetailScreen(
         state = state,
         onBack = onBack,
         onOpenTask = onOpenTask,
+        onOpenHabit = onOpenHabit,
         onToggleExpand = viewModel::onToggleExpand,
         onToggleTaskCompletion = viewModel::onToggleTaskCompletion,
         onDeleteTask = viewModel::onDeleteTask,
@@ -100,6 +110,7 @@ private fun GoalDetailContent(
     state: GoalDetailUiState,
     onBack: () -> Unit,
     onOpenTask: (Long) -> Unit,
+    onOpenHabit: (Long) -> Unit,
     onToggleExpand: (Long) -> Unit,
     onToggleTaskCompletion: (Task) -> Unit,
     onDeleteTask: (Long) -> Unit,
@@ -122,6 +133,7 @@ private fun GoalDetailContent(
     var addTaskOpen by remember { mutableStateOf(false) }
     var editTaskId by remember { mutableStateOf<Long?>(null) }
     var taskMenuFor by remember { mutableStateOf<Task?>(null) }
+    var addHabitOpen by remember { mutableStateOf(false) }
 
     val goal = state.goal
 
@@ -201,6 +213,7 @@ private fun GoalDetailContent(
             )
             if (state.taskRoots.isEmpty()) {
                 AimEmptyState(
+                    modifier = Modifier.fillMaxWidth(),
                     emoji = "📝",
                     title = stringResource(R.string.goal_detail_no_tasks_title),
                     subtitle = stringResource(R.string.goal_detail_no_tasks_subtitle),
@@ -225,6 +238,15 @@ private fun GoalDetailContent(
                     ),
                 )
             }
+
+            Spacer(Modifier.padding(top = 8.dp))
+            HabitsSection(
+                habits = state.linkedHabits,
+                onOpenHabit = onOpenHabit,
+                onAddHabit = { addHabitOpen = true },
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+            Spacer(Modifier.padding(bottom = 96.dp))
         }
     }
 
@@ -259,6 +281,12 @@ private fun GoalDetailContent(
             onDismiss = { editGoalOpen = false },
         )
     }
+    if (addHabitOpen) {
+        HabitEditBottomSheet(
+            mode = HabitEditMode.Create(goalId = goalId),
+            onDismiss = { addHabitOpen = false },
+        )
+    }
     if (addTaskOpen) {
         TaskEditBottomSheet(
             mode = TaskEditMode.Create(goalId = goalId, parentTaskId = addTaskParent),
@@ -284,6 +312,87 @@ private fun GoalDetailContent(
                 taskMenuFor = null
             },
         )
+    }
+}
+
+@Composable
+private fun HabitsSection(
+    habits: List<Habit>,
+    onOpenHabit: (Long) -> Unit,
+    onAddHabit: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.goal_detail_section_habits),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            TextButton(onClick = onAddHabit) {
+                Icon(
+                    imageVector = Icons.Outlined.Add,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(stringResource(R.string.goal_detail_add_habit))
+            }
+        }
+        if (habits.isEmpty()) {
+            Text(
+                text = stringResource(R.string.goal_detail_no_habits),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        } else {
+            val scrollState = rememberScrollState()
+            Row(
+                modifier = Modifier.horizontalScroll(scrollState),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                habits.forEach { habit ->
+                    LinkedHabitChip(
+                        habit = habit,
+                        onClick = { onOpenHabit(habit.id) },
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LinkedHabitChip(
+    habit: Habit,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier
+            .clip(MaterialTheme.shapes.medium)
+            .clickable(onClick = onClick),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        shape = MaterialTheme.shapes.medium,
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            if (!habit.emoji.isNullOrEmpty()) {
+                Text(text = habit.emoji, fontSize = 18.sp)
+            }
+            Text(
+                text = habit.title,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
 

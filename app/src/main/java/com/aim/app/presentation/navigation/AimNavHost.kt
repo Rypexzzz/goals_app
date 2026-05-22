@@ -17,6 +17,7 @@ import com.aim.app.presentation.screens.archive.ArchiveScreen
 import com.aim.app.presentation.screens.dashboard.DashboardScreen
 import com.aim.app.presentation.screens.goaldetail.GoalDetailScreen
 import com.aim.app.presentation.screens.goals.GoalsScreen
+import com.aim.app.presentation.screens.habitdetail.HabitDetailScreen
 import com.aim.app.presentation.screens.habits.HabitsScreen
 import com.aim.app.presentation.screens.settings.SettingsScreen
 import com.aim.app.presentation.screens.taskdetail.TaskDetailScreen
@@ -46,6 +47,7 @@ fun AimNavHost(
     val openSettings: () -> Unit = { navController.navigate(AimRoute.Settings) }
     val openGoal: (Long) -> Unit = { goalId -> navController.navigate(AimRoute.GoalDetail(goalId)) }
     val openTask: (Long) -> Unit = { taskId -> navController.navigate(AimRoute.TaskDetail(taskId)) }
+    val openHabit: (Long) -> Unit = { habitId -> navController.navigate(AimRoute.HabitDetail(habitId)) }
     val openTrash: () -> Unit = { navController.navigate(AimRoute.Trash) }
     val openArchive: () -> Unit = { navController.navigate(AimRoute.Archive) }
 
@@ -70,7 +72,10 @@ fun AimNavHost(
             )
         }
         composable<AimRoute.Habits> {
-            HabitsScreen(onSettingsClick = openSettings)
+            HabitsScreen(
+                onSettingsClick = openSettings,
+                onHabitClick = openHabit,
+            )
         }
         composable<AimRoute.Dashboard> {
             DashboardScreen(onSettingsClick = openSettings)
@@ -96,6 +101,7 @@ fun AimNavHost(
             GoalDetailScreen(
                 onBack = { navController.popBackStack() },
                 onOpenTask = openTask,
+                onOpenHabit = openHabit,
             )
         }
         composable<AimRoute.TaskDetail>(
@@ -114,6 +120,17 @@ fun AimNavHost(
                     }
                 },
                 onOpenSubtask = openTask,
+            )
+        }
+        composable<AimRoute.HabitDetail>(
+            enterTransition = pushEnter,
+            exitTransition = pushExit,
+            popEnterTransition = popEnter,
+            popExitTransition = popExit,
+        ) {
+            HabitDetailScreen(
+                onBack = { navController.popBackStack() },
+                onOpenGoal = openGoal,
             )
         }
         composable<AimRoute.Trash>(
