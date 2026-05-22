@@ -24,11 +24,14 @@ interface TaskDao {
     @Query("SELECT * FROM tasks WHERE id = :id")
     fun observeById(id: Long): Flow<TaskEntity?>
 
+    // В SQLite NULL по умолчанию сортируется раньше любого значения при ASC — это даёт нам
+    // корни (parent_task_id IS NULL) первыми, без явного `NULLS FIRST` (его Room-парсер не понимает).
+    // Финальная иерархия и порядок строятся в `ObserveTasksForGoalUseCase.buildForest()`.
     @Query(
         """
         SELECT * FROM tasks
         WHERE goal_id = :goalId AND deleted_at IS NULL
-        ORDER BY parent_task_id NULLS FIRST, order_index ASC
+        ORDER BY parent_task_id ASC, order_index ASC
         """,
     )
     fun observeForGoal(goalId: Long): Flow<List<TaskEntity>>
