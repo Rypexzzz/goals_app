@@ -11,9 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Archive
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -40,6 +45,8 @@ import com.aim.app.presentation.theme.AimTheme
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onOpenArchive: () -> Unit,
+    onOpenTrash: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
@@ -49,6 +56,8 @@ fun SettingsScreen(
         state = state,
         onBack = onBack,
         onThemeModeSelected = viewModel::onThemeModeSelected,
+        onOpenArchive = onOpenArchive,
+        onOpenTrash = onOpenTrash,
     )
 }
 
@@ -57,6 +66,8 @@ private fun SettingsScreenContent(
     state: SettingsUiState,
     onBack: () -> Unit,
     onThemeModeSelected: (ThemeMode) -> Unit,
+    onOpenArchive: () -> Unit,
+    onOpenTrash: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -79,6 +90,7 @@ private fun SettingsScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
@@ -87,15 +99,17 @@ private fun SettingsScreenContent(
                 currentMode = state.themeMode,
                 onModeChange = onThemeModeSelected,
             )
+            SectionLabel(text = stringResource(R.string.settings_section_data))
+            DataSettingsCard(
+                onOpenArchive = onOpenArchive,
+                onOpenTrash = onOpenTrash,
+            )
         }
     }
 }
 
 @Composable
-private fun SectionLabel(
-    text: String,
-    modifier: Modifier = Modifier,
-) {
+private fun SectionLabel(text: String, modifier: Modifier = Modifier) {
     Text(
         modifier = modifier.padding(horizontal = 4.dp),
         text = text,
@@ -115,7 +129,7 @@ private fun ThemeSettingsCard(
         contentPadding = PaddingValues(vertical = 16.dp, horizontal = 12.dp),
     ) {
         Text(
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+            modifier = Modifier.padding(horizontal = 8.dp),
             text = stringResource(R.string.settings_theme_title),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
@@ -164,6 +178,58 @@ private fun ThemeOptionRow(
     }
 }
 
+@Composable
+private fun DataSettingsCard(
+    onOpenArchive: () -> Unit,
+    onOpenTrash: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    AimCard(
+        modifier = modifier,
+        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp),
+    ) {
+        DataActionRow(
+            icon = Icons.Outlined.Archive,
+            label = stringResource(R.string.settings_open_archive),
+            onClick = onOpenArchive,
+        )
+        DataActionRow(
+            icon = Icons.Outlined.Delete,
+            label = stringResource(R.string.settings_open_trash),
+            onClick = onOpenTrash,
+        )
+    }
+}
+
+@Composable
+private fun DataActionRow(
+    icon: ImageVector,
+    label: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(Modifier.width(12.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+    }
+}
+
 @get:StringRes
 private val ThemeMode.labelRes: Int
     get() = when (this) {
@@ -180,6 +246,8 @@ private fun SettingsScreenPreview() {
             state = SettingsUiState(themeMode = ThemeMode.LIGHT),
             onBack = {},
             onThemeModeSelected = {},
+            onOpenArchive = {},
+            onOpenTrash = {},
         )
     }
 }
