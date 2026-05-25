@@ -1,5 +1,7 @@
 package com.aim.app.presentation.screens.settings
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Upload
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,10 +32,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -39,9 +48,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aim.app.R
 import com.aim.app.domain.model.ThemeMode
+import com.aim.app.presentation.components.AimAlertDialog
 import com.aim.app.presentation.components.AimCard
+import com.aim.app.presentation.components.AimChip
 import com.aim.app.presentation.components.AimTopBar
 import com.aim.app.presentation.theme.AimTheme
+import kotlinx.coroutines.launch
+import java.time.DayOfWeek
 
 @Composable
 fun SettingsScreen(
@@ -53,15 +66,60 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var pendingImportJson by remember { mutableStateOf<String?>(null) }
+
+    val exportLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/json"),
+    ) { uri ->
+        if (uri != null) {
+            scope.launch {
+                val json = viewModel.buildExportJson()
+                runCatching {
+                    context.contentResolver.openOutputStream(uri)?.use { it.write(json.toByteArray()) }
+                }
+            }
+        }
+    }
+    val importLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenDocument(),
+    ) { uri ->
+        if (uri != null) {
+            val json = runCatching {
+                context.contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
+            }.getOrNull()
+            if (json != null) pendingImportJson = json
+        }
+    }
+
     SettingsScreenContent(
         modifier = modifier,
         state = state,
         onBack = onBack,
         onThemeModeSelected = viewModel::onThemeModeSelected,
+        onFirstDayOfWeekSelected = viewModel::onFirstDayOfWeekSelected,
         onOpenArchive = onOpenArchive,
         onOpenTrash = onOpenTrash,
         onOpenNotificationSettings = onOpenNotificationSettings,
+        onExport = { exportLauncher.launch("aim-backup.json") },
+        onImport = { importLauncher.launch(arrayOf("application/json")) },
     )
+
+    pendingImportJson?.let { json ->
+        AimAlertDialog(
+            title = stringResource(R.string.settings_import_confirm_title),
+            text = stringResource(R.string.settings_import_confirm_message),
+            confirmLabel = stringResource(R.string.action_confirm),
+            dismissLabel = stringResource(R.string.action_cancel),
+            destructive = true,
+            onConfirm = {
+                viewModel.importFromJson(json) {}
+                pendingImportJson = null
+            },
+            onDismiss = { pendingImportJson = null },
+        )
+    }
 }
 
 @Composable
@@ -69,9 +127,12 @@ private fun SettingsScreenContent(
     state: SettingsUiState,
     onBack: () -> Unit,
     onThemeModeSelected: (ThemeMode) -> Unit,
+    onFirstDayOfWeekSelected: (DayOfWeek) -> Unit,
     onOpenArchive: () -> Unit,
     onOpenTrash: () -> Unit,
     onOpenNotificationSettings: () -> Unit,
+    onExport: () -> Unit,
+    onImport: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -103,6 +164,10 @@ private fun SettingsScreenContent(
                 currentMode = state.themeMode,
                 onModeChange = onThemeModeSelected,
             )
+            FirstDayOfWeekCard(
+                current = state.firstDayOfWeek,
+                onChange = onFirstDayOfWeekSelected,
+            )
             SectionLabel(text = stringResource(R.string.settings_section_notifications))
             AimCard(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)) {
                 DataActionRow(
@@ -115,6 +180,46 @@ private fun SettingsScreenContent(
             DataSettingsCard(
                 onOpenArchive = onOpenArchive,
                 onOpenTrash = onOpenTrash,
+            )
+            SectionLabel(text = stringResource(R.string.settings_section_backup))
+            AimCard(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)) {
+                DataActionRow(
+                    icon = Icons.Outlined.Upload,
+                    label = stringResource(R.string.settings_export),
+                    onClick = onExport,
+                )
+                DataActionRow(
+                    icon = Icons.Outlined.Download,
+                    label = stringResource(R.string.settings_import),
+                    onClick = onImport,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FirstDayOfWeekCard(
+    current: DayOfWeek,
+    onChange: (DayOfWeek) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    AimCard(modifier = modifier, contentPadding = PaddingValues(16.dp)) {
+        Text(
+            text = stringResource(R.string.settings_first_day_title),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            AimChip(
+                selected = current == DayOfWeek.MONDAY,
+                onClick = { onChange(DayOfWeek.MONDAY) },
+                label = stringResource(R.string.settings_first_day_monday),
+            )
+            AimChip(
+                selected = current == DayOfWeek.SUNDAY,
+                onClick = { onChange(DayOfWeek.SUNDAY) },
+                label = stringResource(R.string.settings_first_day_sunday),
             )
         }
     }
@@ -258,9 +363,12 @@ private fun SettingsScreenPreview() {
             state = SettingsUiState(themeMode = ThemeMode.LIGHT),
             onBack = {},
             onThemeModeSelected = {},
+            onFirstDayOfWeekSelected = {},
             onOpenArchive = {},
             onOpenTrash = {},
             onOpenNotificationSettings = {},
+            onExport = {},
+            onImport = {},
         )
     }
 }

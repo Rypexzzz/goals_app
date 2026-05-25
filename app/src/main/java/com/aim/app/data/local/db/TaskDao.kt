@@ -144,6 +144,15 @@ interface TaskDao {
     @Query("DELETE FROM tasks WHERE deleted_at IS NOT NULL AND deleted_at < :threshold")
     suspend fun purgeDeletedBefore(threshold: Long): Int
 
+    @Query("SELECT * FROM tasks")
+    suspend fun getAllOnce(): List<TaskEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(tasks: List<TaskEntity>)
+
+    @Query("DELETE FROM tasks")
+    suspend fun clear()
+
     /** Счётчики задач первого уровня по каждой цели — для прогресса на дашборде. */
     @Query(
         """

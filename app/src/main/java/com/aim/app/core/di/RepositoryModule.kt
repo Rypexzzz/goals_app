@@ -1,10 +1,14 @@
 package com.aim.app.core.di
 
+import com.aim.app.data.repository.AppPreferencesRepositoryImpl
+import com.aim.app.data.repository.BackupRepositoryImpl
 import com.aim.app.data.repository.GoalRepositoryImpl
 import com.aim.app.data.repository.HabitRepositoryImpl
 import com.aim.app.data.repository.NotificationSettingsRepositoryImpl
 import com.aim.app.data.repository.TaskRepositoryImpl
 import com.aim.app.data.repository.ThemeRepositoryImpl
+import com.aim.app.domain.repository.AppPreferencesRepository
+import com.aim.app.domain.repository.BackupRepository
 import com.aim.app.domain.repository.GoalRepository
 import com.aim.app.domain.repository.HabitRepository
 import com.aim.app.domain.repository.NotificationSettingsRepository
@@ -41,4 +45,14 @@ abstract class RepositoryModule {
     abstract fun bindNotificationSettingsRepository(
         impl: NotificationSettingsRepositoryImpl,
     ): NotificationSettingsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAppPreferencesRepository(
+        impl: AppPreferencesRepositoryImpl,
+    ): AppPreferencesRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindBackupRepository(impl: BackupRepositoryImpl): BackupRepository
 }

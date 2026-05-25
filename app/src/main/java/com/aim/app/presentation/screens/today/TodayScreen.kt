@@ -443,12 +443,16 @@ private fun CompletionToggle(
         failed -> MaterialTheme.colorScheme.error
         else -> MaterialTheme.colorScheme.surfaceVariant
     }
+    val haptic = androidx.compose.ui.platform.LocalHapticFeedback.current
     Box(
         modifier = modifier
             .size(32.dp)
             .clip(CircleShape)
             .background(fillColor)
-            .clickable(onClick = onClick),
+            .clickable {
+                haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress)
+                onClick()
+            },
         contentAlignment = Alignment.Center,
     ) {
         when {

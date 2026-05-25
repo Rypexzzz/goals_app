@@ -32,4 +32,13 @@ interface TaskOccurrenceDao {
 
     @Query("SELECT * FROM task_occurrences WHERE task_id = :taskId ORDER BY date ASC")
     fun observeForTask(taskId: Long): Flow<List<TaskOccurrenceEntity>>
+
+    @Query("SELECT * FROM task_occurrences")
+    suspend fun getAllOnce(): List<TaskOccurrenceEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(occurrences: List<TaskOccurrenceEntity>)
+
+    @Query("DELETE FROM task_occurrences")
+    suspend fun clear()
 }

@@ -17,9 +17,9 @@
 
 > Обновляй этот блок при переходе к следующему спринту.
 
-**Активный спринт:** Спринт 7 — Виджет  
-**Статус:** Sprint 1–6 завершены; Sprint 7 — Glance TodayWidget + Receiver + ToggleWidgetItemAction + WidgetUpdateWorker + WidgetEntryPoint написаны, ждут верификации сборкой.  
-**Следующая задача:** переход к Спринту 8 (Полировка: анимации, onboarding, экспорт/импорт, a11y, swipe/DnD, WidgetConfigurationActivity).
+**Активный спринт:** Все 8 спринтов написаны (ждут первой сборки на машине с Android SDK)  
+**Статус:** Sprint 1–8 закоммичены. Реализован весь основной функционал ТЗ: каркас, цели/задачи (CRUD, дерево, корзина, архив), привычки (стрики, календарь), «Сегодня» (регулярные задачи, просроченные), уведомления (алармы + WorkManager), дашборд (тепловые карты, статистика), виджет (Glance), полировка (onboarding, экспорт/импорт JSON, haptics, первый день недели).  
+**Следующая задача:** прогнать `./gradlew assembleDebug test lint` на машине с Android SDK, ручное тестирование по docs/SETUP.md, затем добить отложенный список Sprint 8 из docs/DECISIONS.md ADR-0024 (shared-element, swipe/DnD, скелетоны, WidgetConfigurationActivity, Baseline Profile).
 
 ## 🛠️ Стек (краткая шпаргалка)
 

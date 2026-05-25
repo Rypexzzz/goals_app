@@ -133,4 +133,24 @@ interface HabitDao {
     /** Все отметки всех привычек — для экрана «Сегодня» (расчёт due/done и стриков). */
     @Query("SELECT * FROM habit_check_ins ORDER BY date ASC")
     fun observeAllCheckIns(): Flow<List<HabitCheckInEntity>>
+
+    // --- bulk для экспорта/импорта ---
+
+    @Query("SELECT * FROM habits")
+    suspend fun getAllHabitsOnce(): List<HabitEntity>
+
+    @Query("SELECT * FROM habit_check_ins")
+    suspend fun getAllCheckInsOnce(): List<HabitCheckInEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllHabits(habits: List<HabitEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllCheckIns(checkIns: List<HabitCheckInEntity>)
+
+    @Query("DELETE FROM habits")
+    suspend fun clearHabits()
+
+    @Query("DELETE FROM habit_check_ins")
+    suspend fun clearCheckIns()
 }

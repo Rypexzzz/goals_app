@@ -4,6 +4,24 @@
 
 ## [Unreleased]
 
+### Added — Sprint 8: Полировка и доп. фичи
+
+- **Onboarding** — 3 экрана при первом запуске (концепция / разрешения / первая цель) на `HorizontalPager` с индикатором страниц и запросом POST_NOTIFICATIONS. Флаг завершения в DataStore (`AppPreferencesRepository`); `RootViewModel` гейтит онбординг vs основное приложение.
+- **Экспорт/импорт JSON** (README §6.8) — `BackupRepository` сериализует все таблицы (goals/tasks/occurrences/habits/checkIns) в версионированный `BackupEnvelope`; импорт заменяет данные в одной транзакции (очистка + вставка в FK-порядке). UI в Настройках через SAF (`CreateDocument`/`OpenDocument`) с диалогом подтверждения замены.
+- **Настройка «первый день недели»** (Пн/Вс) в DataStore + чипы в Настройках.
+- **Haptic feedback** на отметку выполнения в «Сегодня».
+- **Тесты:** `BackupSerializationTest` (roundtrip всех сущностей + игнор будущих полей).
+
+### Deferred (осознанно, ADR-0024)
+
+Не вошло в Sprint 8 — требует устройства для отладки или отдельного модуля:
+- Shared element transitions (карточка цели ↔ детальный) — экспериментальный `SharedTransitionLayout`.
+- Swipe-жесты и drag-n-drop на «Сегодня» (ADR-0018), полный DnD между уровнями дерева.
+- Скелетоны/stagger/pulse на всех экранах, размер шрифта в настройках.
+- `WidgetConfigurationActivity` (ADR-0023).
+- Macrobenchmark + Baseline Profile (нужен отдельный gradle-модуль и реальное устройство).
+- Распространение «первого дня недели» во все расчёты дат (сейчас календарь/стрики используют параметр со значением Пн по умолчанию).
+
 ### Added — Sprint 7: Виджет
 
 - **Jetpack Glance 1.1.1** — большой виджет «Сегодня» (`TodayWidget : GlanceAppWidget`): дата, сводка (X/Y), список задач/привычек с чекбоксами (до 10 строк).

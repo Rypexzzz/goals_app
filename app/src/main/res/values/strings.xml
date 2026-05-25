@@ -162,6 +162,25 @@
     <string name="settings_open_trash">Корзина</string>
     <string name="settings_section_notifications">Уведомления</string>
     <string name="settings_open_notifications">Настройки уведомлений</string>
+    <string name="settings_first_day_title">Первый день недели</string>
+    <string name="settings_first_day_monday">Понедельник</string>
+    <string name="settings_first_day_sunday">Воскресенье</string>
+    <string name="settings_section_backup">Резервная копия</string>
+    <string name="settings_export">Экспорт в файл (JSON)</string>
+    <string name="settings_import">Импорт из файла</string>
+    <string name="settings_import_confirm_title">Заменить текущие данные?</string>
+    <string name="settings_import_confirm_message">Импорт полностью заменит все цели, задачи и привычки данными из файла. Действие необратимо.</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Пропустить</string>
+    <string name="onboarding_next">Далее</string>
+    <string name="onboarding_start">Начать</string>
+    <string name="onboarding_concept_title">Большие цели — по шагам</string>
+    <string name="onboarding_concept_body">Aim помогает декомпозировать цели на задачи и подзадачи и вырабатывать привычки через ежедневные отметки. Локально, без облака.</string>
+    <string name="onboarding_permissions_title">Напоминания вовремя</string>
+    <string name="onboarding_permissions_body">Разреши уведомления, чтобы получать утренний бриф, вечерний чек-ин и напоминания о дедлайнах. Всё настраивается.</string>
+    <string name="onboarding_first_goal_title">Поехали!</string>
+    <string name="onboarding_first_goal_body">Создай первую цель на вкладке «Цели» и добавь к ней пару задач. Маленький первый шаг — уже движение.</string>
 
     <!-- Notification channels -->
     <string name="channel_daily">Ежедневные</string>
