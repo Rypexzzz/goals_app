@@ -1,10 +1,12 @@
 package com.aim.app.widget
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.LocalContext
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
@@ -111,11 +113,12 @@ class TodayWidget : GlanceAppWidget() {
 
     @Composable
     private fun WidgetRow(item: TodayItem) {
+        val context = LocalContext.current
         Row(
             modifier = GlanceModifier
                 .fillMaxWidth()
                 .padding(vertical = 6.dp)
-                .clickable(actionStartActivity<MainActivity>()),
+                .clickable(actionStartActivity(Intent(context, MainActivity::class.java))),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(

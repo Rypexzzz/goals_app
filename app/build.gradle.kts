@@ -110,8 +110,6 @@ dependencies {
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
 
-    implementation(libs.compose.richtext.commonmark)
-    implementation(libs.compose.richtext.ui.material3)
     implementation(libs.reorderable)
 
     implementation(libs.hilt.android)
