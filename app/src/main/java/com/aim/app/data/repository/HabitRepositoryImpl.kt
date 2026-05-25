@@ -103,4 +103,7 @@ class HabitRepositoryImpl @Inject constructor(
     override suspend fun deleteCheckIn(habitId: Long, date: LocalDate) {
         dao.deleteCheckIn(habitId, date.toString())
     }
+
+    override suspend fun purgeDeletedBefore(threshold: java.time.Instant): Int =
+        dao.purgeDeletedBefore(threshold.toEpochMilli())
 }

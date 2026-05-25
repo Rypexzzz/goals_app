@@ -125,4 +125,7 @@ interface GoalDao {
 
     @Query("DELETE FROM goals WHERE id = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("DELETE FROM goals WHERE deleted_at IS NOT NULL AND deleted_at < :threshold")
+    suspend fun purgeDeletedBefore(threshold: Long): Int
 }

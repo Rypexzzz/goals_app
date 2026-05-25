@@ -4,6 +4,26 @@
 
 ## [Unreleased]
 
+### Added — Sprint 5: Уведомления
+
+- **WorkManager 2.10 + Hilt-Work** — `AimApplication` реализует `Configuration.Provider`, дефолтный WorkManager-инициализатор отключён в манифесте.
+- **Настройки уведомлений** — `NotificationSettings` (master-тоггл, пер-тип enabled/время/звук/вибрация, окно «не беспокоить» с корректной обработкой перехода через полночь). Персист в DataStore одной JSON-строкой (`NotificationPreferencesDataSource`), репозиторий + use cases.
+- **Каналы** — `AimChannel` (DAILY / TASKS / HABITS / SUMMARY), `NotificationChannelInitializer` создаёт их при старте.
+- **`AimNotifier`** — обёртка над `NotificationManagerCompat` с проверкой POST_NOTIFICATIONS, BigText-стилем, действием «Выполнено» через PendingIntent.
+- **`AlarmScheduler`** — обёртка над AlarmManager (`setExactAndAllowWhileIdle`) с graceful degradation, если нет права на точные алармы.
+- **`NotificationScheduler`** — оркестратор: дайджесты (утренний/вечерний/недельный) — периодические Worker'ы; точные ко времени (первое дело, предупреждение стрика) — алармы; ежедневное обслуживание — `DailyMaintenanceWorker`.
+- **Workers:** `MorningBriefWorker`, `EveningCheckinWorker`, `WeeklySummaryWorker`, `DailyMaintenanceWorker` (чистка корзины + дедлайны). Все `@HiltWorker`.
+- **`NotificationContentProvider`** — строит контент из доменных данных (через `GetTodayItemsUseCase`/репозитории), уважает master/DND.
+- **Receivers:** `NotificationActionReceiver` (отметка «Выполнено» из шторки без открытия приложения), `BootReceiver` (пересоздание расписаний), `AlarmReceiver` (пост + перепланирование следующего срабатывания).
+- **`PurgeOldTrashUseCase`** — авто-чистка корзины старше 30 дней (вызывается из DailyMaintenanceWorker).
+- **Экран `NotificationSettingsScreen`** — master-тоггл, карточка на каждый из 6 типов (тоггл + время через `AimTimePickerDialog`), окно «не беспокоить». Запрос POST_NOTIFICATIONS при включении (Android 13+).
+- **Тесты:** `NotificationSettingsTest` (DND внутри дня / через полночь / отсутствие окна), `PurgeOldTrashUseCaseTest` (порог = now − retentionDays, суммирование).
+
+### Notes
+
+- Точные алармы (Android 12+): при отсутствии `SCHEDULE_EXACT_ALARM` `AlarmScheduler` падает на неточный `setAndAllowWhileIdle` — уведомления приходят, но без секундной точности. ADR-0020.
+- Распределение Worker vs Alarm: дайджесты не требуют секундной точности → WorkManager (переживает reboot сам); точные ко времени → AlarmManager + BootReceiver. ADR-0021.
+
 ### Added — Sprint 4: Чек-лист «Сегодня»
 
 - **Database v3** — миграция v2 → v3: таблица `task_occurrences(task_id, date, status, completed_at)` для материализованных экземпляров регулярных задач (UNIQUE по task_id+date, FK CASCADE).

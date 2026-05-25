@@ -90,6 +90,9 @@ interface HabitDao {
     @Query("DELETE FROM habits WHERE id = :id")
     suspend fun deleteById(id: Long)
 
+    @Query("DELETE FROM habits WHERE deleted_at IS NOT NULL AND deleted_at < :threshold")
+    suspend fun purgeDeletedBefore(threshold: Long): Int
+
     // -----------------------------------------------------------------------------
     // Check-ins
     // -----------------------------------------------------------------------------

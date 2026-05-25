@@ -151,6 +151,9 @@ class TaskRepositoryImpl @Inject constructor(
     override suspend fun getSubtreeIds(taskId: Long): Set<Long> =
         dao.getSubtreeIds(taskId).toSet()
 
+    override suspend fun purgeDeletedBefore(threshold: java.time.Instant): Int =
+        dao.purgeDeletedBefore(threshold.toEpochMilli())
+
     private suspend fun computeSubtreeMaxDepth(rootId: Long, rootDepth: Int): Int {
         val ids = dao.getSubtreeIds(rootId)
         var max = rootDepth

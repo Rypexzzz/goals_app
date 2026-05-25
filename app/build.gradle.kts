@@ -103,6 +103,10 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
+    implementation(libs.androidx.work.runtime)
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
+
     implementation(libs.compose.richtext.commonmark)
     implementation(libs.compose.richtext.ui.material3)
     implementation(libs.reorderable)

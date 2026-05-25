@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -47,6 +48,7 @@ fun SettingsScreen(
     onBack: () -> Unit,
     onOpenArchive: () -> Unit,
     onOpenTrash: () -> Unit,
+    onOpenNotificationSettings: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
@@ -58,6 +60,7 @@ fun SettingsScreen(
         onThemeModeSelected = viewModel::onThemeModeSelected,
         onOpenArchive = onOpenArchive,
         onOpenTrash = onOpenTrash,
+        onOpenNotificationSettings = onOpenNotificationSettings,
     )
 }
 
@@ -68,6 +71,7 @@ private fun SettingsScreenContent(
     onThemeModeSelected: (ThemeMode) -> Unit,
     onOpenArchive: () -> Unit,
     onOpenTrash: () -> Unit,
+    onOpenNotificationSettings: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -99,6 +103,14 @@ private fun SettingsScreenContent(
                 currentMode = state.themeMode,
                 onModeChange = onThemeModeSelected,
             )
+            SectionLabel(text = stringResource(R.string.settings_section_notifications))
+            AimCard(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)) {
+                DataActionRow(
+                    icon = Icons.Outlined.Notifications,
+                    label = stringResource(R.string.settings_open_notifications),
+                    onClick = onOpenNotificationSettings,
+                )
+            }
             SectionLabel(text = stringResource(R.string.settings_section_data))
             DataSettingsCard(
                 onOpenArchive = onOpenArchive,
@@ -248,6 +260,7 @@ private fun SettingsScreenPreview() {
             onThemeModeSelected = {},
             onOpenArchive = {},
             onOpenTrash = {},
+            onOpenNotificationSettings = {},
         )
     }
 }

@@ -140,6 +140,9 @@ interface TaskDao {
     @Query("DELETE FROM tasks WHERE id = :id")
     suspend fun deleteById(id: Long)
 
+    @Query("DELETE FROM tasks WHERE deleted_at IS NOT NULL AND deleted_at < :threshold")
+    suspend fun purgeDeletedBefore(threshold: Long): Int
+
     /**
      * Возвращает идентификаторы поддерева задачи через рекурсивный CTE.
      * Включает саму задачу.

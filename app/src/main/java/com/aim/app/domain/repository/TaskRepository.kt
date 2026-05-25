@@ -65,4 +65,7 @@ interface TaskRepository {
 
     /** Получить идентификаторы всех потомков задачи (включая саму) — для проверки циклов. */
     suspend fun getSubtreeIds(taskId: Long): Set<Long>
+
+    /** Окончательно удалить задачи в корзине, удалённые раньше [threshold]. */
+    suspend fun purgeDeletedBefore(threshold: java.time.Instant): Int
 }

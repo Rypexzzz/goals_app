@@ -17,9 +17,9 @@
 
 > Обновляй этот блок при переходе к следующему спринту.
 
-**Активный спринт:** Спринт 4 — Чек-лист «Сегодня»  
-**Статус:** Sprint 1–3 завершены; Sprint 4 — Room v2→v3 (task_occurrences), RecurrenceMatcher + HabitScheduler + GetTodayItemsUseCase, AimProgressRing, TodayScreen с overdue-баннером и секциями todo/done написаны, ждут верификации сборкой.  
-**Следующая задача:** переход к Спринту 5 (Уведомления). Swipe/DnD на «Сегодня» отложены в Sprint 8 (ADR-0018).
+**Активный спринт:** Спринт 5 — Уведомления  
+**Статус:** Sprint 1–4 завершены; Sprint 5 — WorkManager+Hilt-Work, NotificationSettings (DataStore), каналы, AimNotifier, AlarmScheduler, NotificationScheduler, 4 Worker'а, 3 receiver'а, PurgeOldTrash, NotificationSettingsScreen написаны, ждут верификации сборкой.  
+**Следующая задача:** переход к Спринту 6 (Дашборд). Запрос SCHEDULE_EXACT_ALARM через системный экран — Sprint 8 (ADR-0020).
 
 ## 🛠️ Стек (краткая шпаргалка)
 
