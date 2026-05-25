@@ -1,8 +1,10 @@
 package com.aim.app.domain.repository
 
+import com.aim.app.domain.model.GoalTaskTally
 import com.aim.app.domain.model.Task
 import com.aim.app.domain.model.TaskOccurrence
 import kotlinx.coroutines.flow.Flow
+import java.time.Instant
 import java.time.LocalDate
 
 interface TaskRepository {
@@ -29,6 +31,12 @@ interface TaskRepository {
         startInclusive: LocalDate,
         endInclusive: LocalDate,
     ): Flow<List<TaskOccurrence>>
+
+    /** Счётчики задач первого уровня по целям — для прогресса на дашборде. */
+    fun observeFirstLevelTaskCounts(): Flow<List<GoalTaskTally>>
+
+    /** Разовые задачи, выполненные в диапазоне — для статистики периода. */
+    fun observeTasksCompletedBetween(start: Instant, end: Instant): Flow<List<Task>>
 
     /**
      * Создание задачи. Реализация устанавливает `depth` и `orderIndex` автоматически из parentTaskId.

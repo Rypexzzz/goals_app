@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.aim.app.data.local.db.projection.GoalTaskCount
 import com.aim.app.data.local.entity.TaskEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -142,6 +143,32 @@ interface TaskDao {
 
     @Query("DELETE FROM tasks WHERE deleted_at IS NOT NULL AND deleted_at < :threshold")
     suspend fun purgeDeletedBefore(threshold: Long): Int
+
+    /** Счётчики задач первого уровня по каждой цели — для прогресса на дашборде. */
+    @Query(
+        """
+        SELECT t.goal_id AS goalId,
+               COUNT(*) AS total,
+               SUM(CASE WHEN t.status = 'COMPLETED' THEN 1 ELSE 0 END) AS done
+        FROM tasks t
+        WHERE t.parent_task_id IS NULL AND t.deleted_at IS NULL
+        GROUP BY t.goal_id
+        """,
+    )
+    fun observeFirstLevelCounts(): Flow<List<GoalTaskCount>>
+
+    /** Разовые задачи, выполненные в диапазоне (по completed_at) — для статистики периода. */
+    @Query(
+        """
+        SELECT * FROM tasks
+        WHERE status = 'COMPLETED'
+          AND completed_at IS NOT NULL
+          AND completed_at >= :startMillis
+          AND completed_at <= :endMillis
+          AND deleted_at IS NULL
+        """,
+    )
+    fun observeCompletedBetween(startMillis: Long, endMillis: Long): Flow<List<TaskEntity>>
 
     /**
      * Возвращает идентификаторы поддерева задачи через рекурсивный CTE.

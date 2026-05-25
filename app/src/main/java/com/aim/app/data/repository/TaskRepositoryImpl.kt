@@ -51,6 +51,18 @@ class TaskRepositoryImpl @Inject constructor(
         occurrenceDao.observeInRange(startInclusive.toString(), endInclusive.toString())
             .map { list -> list.map { it.toDomain() } }
 
+    override fun observeFirstLevelTaskCounts(): Flow<List<com.aim.app.domain.model.GoalTaskTally>> =
+        dao.observeFirstLevelCounts().map { list ->
+            list.map { com.aim.app.domain.model.GoalTaskTally(it.goalId, it.total, it.done) }
+        }
+
+    override fun observeTasksCompletedBetween(
+        start: java.time.Instant,
+        end: java.time.Instant,
+    ): Flow<List<Task>> =
+        dao.observeCompletedBetween(start.toEpochMilli(), end.toEpochMilli())
+            .map { list -> list.map { it.toDomain() } }
+
     override suspend fun rescheduleTask(taskId: Long, newDate: LocalDate?) {
         dao.updateScheduledFor(taskId, newDate?.toString())
     }

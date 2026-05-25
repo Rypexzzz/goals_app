@@ -17,9 +17,9 @@
 
 > Обновляй этот блок при переходе к следующему спринту.
 
-**Активный спринт:** Спринт 5 — Уведомления  
-**Статус:** Sprint 1–4 завершены; Sprint 5 — WorkManager+Hilt-Work, NotificationSettings (DataStore), каналы, AimNotifier, AlarmScheduler, NotificationScheduler, 4 Worker'а, 3 receiver'а, PurgeOldTrash, NotificationSettingsScreen написаны, ждут верификации сборкой.  
-**Следующая задача:** переход к Спринту 6 (Дашборд). Запрос SCHEDULE_EXACT_ALARM через системный экран — Sprint 8 (ADR-0020).
+**Активный спринт:** Спринт 6 — Дашборд  
+**Статус:** Sprint 1–5 завершены; Sprint 6 — 5 dashboard use cases, AimHeatmap + AimSegmentedControl, DashboardScreen с 5 секциями написаны, ждут верификации сборкой.  
+**Следующая задача:** переход к Спринту 7 (Виджет Glance).
 
 ## 🛠️ Стек (краткая шпаргалка)
 

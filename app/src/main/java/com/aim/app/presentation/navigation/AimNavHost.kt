@@ -80,7 +80,11 @@ fun AimNavHost(
             )
         }
         composable<AimRoute.Dashboard> {
-            DashboardScreen(onSettingsClick = openSettings)
+            DashboardScreen(
+                onSettingsClick = openSettings,
+                onOpenHabit = openHabit,
+                onOpenGoal = openGoal,
+            )
         }
         composable<AimRoute.Settings>(
             enterTransition = pushEnter,

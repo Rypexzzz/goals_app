@@ -244,6 +244,19 @@
     <string name="dashboard_title">Дашборд</string>
     <string name="dashboard_empty_title">Графики появятся позже</string>
     <string name="dashboard_empty_subtitle">Когда накопятся данные о задачах и привычках, здесь будут стрики, тепловые карты и прогресс.</string>
+    <string name="dashboard_summary_habits">%d привычек сегодня</string>
+    <string name="dashboard_section_streaks">Активные стрики</string>
+    <string name="dashboard_section_heatmaps">Тепловая карта привычек</string>
+    <string name="dashboard_section_goals">Прогресс по целям</string>
+    <string name="dashboard_section_period">Статистика за период</string>
+    <string name="dashboard_period_week">Неделя</string>
+    <string name="dashboard_period_month">Месяц</string>
+    <string name="dashboard_period_year">Год</string>
+    <string name="dashboard_stat_tasks">Задач</string>
+    <string name="dashboard_stat_habit_done">Отметок ✓</string>
+    <string name="dashboard_stat_habit_failed">Срывов</string>
+    <string name="dashboard_stat_best_day">Лучший день</string>
+    <string name="dashboard_stat_avg">В среднем/день</string>
 
     <!-- Generic actions -->
     <string name="action_settings">Настройки</string>

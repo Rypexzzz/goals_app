@@ -4,6 +4,19 @@
 
 ## [Unreleased]
 
+### Added — Sprint 6: Дашборд
+
+- **5 use cases:** `GetDashboardSummaryUseCase`, `GetActiveStreaksUseCase`, `GetHabitHeatmapsUseCase` (13 недель), `GetGoalProgressUseCase` (% задач 1-го уровня, сортировка по дедлайну), `GetPeriodStatsUseCase` (неделя/месяц/год).
+- **Компоненты:** `AimHeatmap` (Canvas-сетка недель × дней с tap-детекцией), `AimSegmentedControl`.
+- **DAO-проекции:** `observeFirstLevelCounts` (счётчики задач 1-го уровня по целям), `observeCompletedBetween` (выполненные задачи в диапазоне).
+- **Экран `DashboardScreen`** — 5 секций (README §6.5): сводка с кольцом, карусель стриков, тепловые карты привычек, прогресс целей, статистика периода с картой продуктивности. Тапы → детальные экраны.
+- **Тест:** `GetGoalProgressUseCaseTest`.
+
+### Notes
+
+- Без геймификации/прогнозов — только факты (README §6.5).
+- Карта продуктивности агрегирует выполненные разовые задачи + завершённые экземпляры регулярных + DONE-отметки привычек по дням.
+
 ### Added — Sprint 5: Уведомления
 
 - **WorkManager 2.10 + Hilt-Work** — `AimApplication` реализует `Configuration.Provider`, дефолтный WorkManager-инициализатор отключён в манифесте.
