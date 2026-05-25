@@ -32,6 +32,8 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             runCatching { notificationScheduler.rescheduleAll() }
         }
+        // Периодическое обновление виджета (полночь + каждые 30 мин).
+        com.aim.app.widget.WidgetUpdateWorker.enqueue(applicationContext)
 
         setContent {
             val themeMode by observeThemeMode()

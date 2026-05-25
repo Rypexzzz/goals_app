@@ -60,6 +60,12 @@ interface TaskRepository {
     /** Отметить/снять выполнение экземпляра регулярной задачи на дату. */
     suspend fun setOccurrenceCompleted(taskId: Long, date: LocalDate, completed: Boolean)
 
+    /** Выполнен ли экземпляр регулярной задачи на дату. */
+    suspend fun isOccurrenceCompleted(taskId: Long, date: LocalDate): Boolean
+
+    /** Снимок задачи по id (одноразовое чтение). */
+    suspend fun getTask(taskId: Long): Task?
+
     /**
      * Изменить родителя задачи. Должен проверять отсутствие циклов и ограничение глубины
      * (новый parent.depth + 1 + поддерево не превышает [Task.MAX_DEPTH]).

@@ -4,6 +4,21 @@
 
 ## [Unreleased]
 
+### Added — Sprint 7: Виджет
+
+- **Jetpack Glance 1.1.1** — большой виджет «Сегодня» (`TodayWidget : GlanceAppWidget`): дата, сводка (X/Y), список задач/привычек с чекбоксами (до 10 строк).
+- **`WidgetEntryPoint`** — Hilt EntryPoint для доступа к use cases из не-Hilt-компонентов (Glance widget / ActionCallback).
+- **`ToggleWidgetItemAction`** (`ActionCallback`) — отметка выполнения прямо из виджета без открытия приложения, через `ToggleTodayItemUseCase`; виджет обновляется сразу.
+- **`ToggleTodayItemUseCase`** — переключение по `stableKey` (task / task-occ / habit), переиспользуется виджетом.
+- **`WidgetUpdateWorker`** — периодическое обновление каждые 30 минут (`updateAll`).
+- **`TodayWidgetReceiver`** + `xml/today_widget_info.xml` (4×4 cells, resizable) + manifest receiver.
+- Тап по строке открывает приложение (`actionStartActivity<MainActivity>`).
+
+### Notes
+
+- **`WidgetConfigurationActivity` (тема/прозрачность/число строк) отложена в Sprint 8** — виджет работает с дефолтами (до 10 строк, тема системная через GlanceTheme). ADR-0023.
+- Glance-виджет читает данные снапшотом в `provideGlance` через EntryPoint; реактивное обновление — через 30-минутный worker и немедленно после действия в виджете.
+
 ### Added — Sprint 6: Дашборд
 
 - **5 use cases:** `GetDashboardSummaryUseCase`, `GetActiveStreaksUseCase`, `GetHabitHeatmapsUseCase` (13 недель), `GetGoalProgressUseCase` (% задач 1-го уровня, сортировка по дедлайну), `GetPeriodStatsUseCase` (неделя/месяц/год).

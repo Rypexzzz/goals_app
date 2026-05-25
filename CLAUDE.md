@@ -17,9 +17,9 @@
 
 > Обновляй этот блок при переходе к следующему спринту.
 
-**Активный спринт:** Спринт 6 — Дашборд  
-**Статус:** Sprint 1–5 завершены; Sprint 6 — 5 dashboard use cases, AimHeatmap + AimSegmentedControl, DashboardScreen с 5 секциями написаны, ждут верификации сборкой.  
-**Следующая задача:** переход к Спринту 7 (Виджет Glance).
+**Активный спринт:** Спринт 7 — Виджет  
+**Статус:** Sprint 1–6 завершены; Sprint 7 — Glance TodayWidget + Receiver + ToggleWidgetItemAction + WidgetUpdateWorker + WidgetEntryPoint написаны, ждут верификации сборкой.  
+**Следующая задача:** переход к Спринту 8 (Полировка: анимации, onboarding, экспорт/импорт, a11y, swipe/DnD, WidgetConfigurationActivity).
 
 ## 🛠️ Стек (краткая шпаргалка)
 

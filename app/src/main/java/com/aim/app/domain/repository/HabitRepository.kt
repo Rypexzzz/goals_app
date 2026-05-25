@@ -55,6 +55,9 @@ interface HabitRepository {
     /** Удалить отметку за дату (вернуть в состояние «не отмечено»). */
     suspend fun deleteCheckIn(habitId: Long, date: LocalDate)
 
+    /** Статус отметки за дату (одноразовое чтение). */
+    suspend fun getCheckInStatus(habitId: Long, date: LocalDate): CheckInStatus?
+
     /** Окончательно удалить привычки в корзине, удалённые раньше [threshold]. */
     suspend fun purgeDeletedBefore(threshold: java.time.Instant): Int
 }

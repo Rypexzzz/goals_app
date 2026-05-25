@@ -67,6 +67,12 @@ class TaskRepositoryImpl @Inject constructor(
         dao.updateScheduledFor(taskId, newDate?.toString())
     }
 
+    override suspend fun isOccurrenceCompleted(taskId: Long, date: LocalDate): Boolean =
+        occurrenceDao.getOccurrence(taskId, date.toString())?.status == TaskStatus.COMPLETED.name
+
+    override suspend fun getTask(taskId: Long): Task? =
+        dao.getById(taskId)?.toDomain()
+
     override suspend fun setOccurrenceCompleted(taskId: Long, date: LocalDate, completed: Boolean) {
         if (completed) {
             val existing = occurrenceDao.getOccurrence(taskId, date.toString())

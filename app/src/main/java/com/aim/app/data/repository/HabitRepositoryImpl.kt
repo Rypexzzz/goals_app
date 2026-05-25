@@ -104,6 +104,14 @@ class HabitRepositoryImpl @Inject constructor(
         dao.deleteCheckIn(habitId, date.toString())
     }
 
+    override suspend fun getCheckInStatus(
+        habitId: Long,
+        date: LocalDate,
+    ): com.aim.app.domain.model.CheckInStatus? {
+        val raw = dao.getCheckIn(habitId, date.toString())?.status ?: return null
+        return runCatching { com.aim.app.domain.model.CheckInStatus.valueOf(raw) }.getOrNull()
+    }
+
     override suspend fun purgeDeletedBefore(threshold: java.time.Instant): Int =
         dao.purgeDeletedBefore(threshold.toEpochMilli())
 }
