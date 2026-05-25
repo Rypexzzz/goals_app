@@ -81,6 +81,6 @@ private fun NavHostController.switchTab(tab: BottomTab) {
         AimRoute.Goals -> navigate(route, applyTabOptions)
         AimRoute.Habits -> navigate(route, applyTabOptions)
         AimRoute.Dashboard -> navigate(route, applyTabOptions)
-        AimRoute.Settings -> Unit
+        else -> Unit // прочие маршруты не используются как вкладки нижней навигации
     }
 }
