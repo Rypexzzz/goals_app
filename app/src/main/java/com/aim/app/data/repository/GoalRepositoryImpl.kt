@@ -75,4 +75,7 @@ class GoalRepositoryImpl @Inject constructor(
     override suspend fun permanentlyDelete(goalId: Long) {
         dao.deleteById(goalId)
     }
+
+    override suspend fun purgeDeletedBefore(threshold: java.time.Instant): Int =
+        dao.purgeDeletedBefore(threshold.toEpochMilli())
 }

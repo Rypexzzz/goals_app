@@ -90,6 +90,9 @@ interface HabitDao {
     @Query("DELETE FROM habits WHERE id = :id")
     suspend fun deleteById(id: Long)
 
+    @Query("DELETE FROM habits WHERE deleted_at IS NOT NULL AND deleted_at < :threshold")
+    suspend fun purgeDeletedBefore(threshold: Long): Int
+
     // -----------------------------------------------------------------------------
     // Check-ins
     // -----------------------------------------------------------------------------
@@ -126,4 +129,28 @@ interface HabitDao {
 
     @Query("SELECT * FROM habit_check_ins WHERE habit_id = :habitId AND date = :date")
     suspend fun getCheckIn(habitId: Long, date: String): HabitCheckInEntity?
+
+    /** Все отметки всех привычек — для экрана «Сегодня» (расчёт due/done и стриков). */
+    @Query("SELECT * FROM habit_check_ins ORDER BY date ASC")
+    fun observeAllCheckIns(): Flow<List<HabitCheckInEntity>>
+
+    // --- bulk для экспорта/импорта ---
+
+    @Query("SELECT * FROM habits")
+    suspend fun getAllHabitsOnce(): List<HabitEntity>
+
+    @Query("SELECT * FROM habit_check_ins")
+    suspend fun getAllCheckInsOnce(): List<HabitCheckInEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllHabits(habits: List<HabitEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllCheckIns(checkIns: List<HabitCheckInEntity>)
+
+    @Query("DELETE FROM habits")
+    suspend fun clearHabits()
+
+    @Query("DELETE FROM habit_check_ins")
+    suspend fun clearCheckIns()
 }

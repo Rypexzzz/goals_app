@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Aim</string>
+    <string name="widget_description">Задачи и привычки на сегодня</string>
 
     <!-- Bottom navigation -->
     <string name="bottom_today">Сегодня</string>
@@ -12,6 +13,24 @@
     <string name="today_title">Сегодня</string>
     <string name="today_empty_title">Сегодня — чистый лист</string>
     <string name="today_empty_subtitle">Запланируй задачу или отметь привычку, и она появится здесь.</string>
+    <string name="today_section_todo">Нужно сделать</string>
+    <string name="today_section_done">Выполнено сегодня</string>
+    <string name="today_summary_done">%1$d из %2$d выполнено</string>
+    <string name="today_overdue_move_today">На сегодня</string>
+    <string name="today_overdue_move_tomorrow">На завтра</string>
+    <string name="today_action_snooze_tomorrow">Отложить на завтра</string>
+    <string name="today_action_snooze_3days">+ 3 дня</string>
+    <string name="today_action_pick_date">Изменить дату</string>
+    <string name="today_action_delete">Удалить</string>
+    <string name="today_action_open">Открыть</string>
+    <string name="today_habit_failed">Сорвался</string>
+    <string name="today_item_menu">Действия</string>
+    <plurals name="today_overdue_banner">
+        <item quantity="one">У вас %d просроченная задача</item>
+        <item quantity="few">У вас %d просроченные задачи</item>
+        <item quantity="many">У вас %d просроченных задач</item>
+        <item quantity="other">У вас %d просроченных задач</item>
+    </plurals>
 
     <!-- Goals: list & filters -->
     <string name="goals_title">Цели</string>
@@ -141,6 +160,67 @@
     <string name="settings_theme_dark">Тёмная</string>
     <string name="settings_open_archive">Архив целей</string>
     <string name="settings_open_trash">Корзина</string>
+    <string name="settings_section_notifications">Уведомления</string>
+    <string name="settings_open_notifications">Настройки уведомлений</string>
+    <string name="settings_first_day_title">Первый день недели</string>
+    <string name="settings_first_day_monday">Понедельник</string>
+    <string name="settings_first_day_sunday">Воскресенье</string>
+    <string name="settings_section_backup">Резервная копия</string>
+    <string name="settings_export">Экспорт в файл (JSON)</string>
+    <string name="settings_import">Импорт из файла</string>
+    <string name="settings_import_confirm_title">Заменить текущие данные?</string>
+    <string name="settings_import_confirm_message">Импорт полностью заменит все цели, задачи и привычки данными из файла. Действие необратимо.</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Пропустить</string>
+    <string name="onboarding_next">Далее</string>
+    <string name="onboarding_start">Начать</string>
+    <string name="onboarding_concept_title">Большие цели — по шагам</string>
+    <string name="onboarding_concept_body">Aim помогает декомпозировать цели на задачи и подзадачи и вырабатывать привычки через ежедневные отметки. Локально, без облака.</string>
+    <string name="onboarding_permissions_title">Напоминания вовремя</string>
+    <string name="onboarding_permissions_body">Разреши уведомления, чтобы получать утренний бриф, вечерний чек-ин и напоминания о дедлайнах. Всё настраивается.</string>
+    <string name="onboarding_first_goal_title">Поехали!</string>
+    <string name="onboarding_first_goal_body">Создай первую цель на вкладке «Цели» и добавь к ней пару задач. Маленький первый шаг — уже движение.</string>
+
+    <!-- Notification channels -->
+    <string name="channel_daily">Ежедневные</string>
+    <string name="channel_tasks">Задачи</string>
+    <string name="channel_habits">Привычки</string>
+    <string name="channel_summary">Сводки</string>
+
+    <!-- Notification content -->
+    <string name="notification_action_done">✓ Выполнено</string>
+    <string name="notif_morning_title">Доброе утро!</string>
+    <string name="notif_morning_text">Сегодня у вас %1$d задач и %2$d привычек.</string>
+    <string name="notif_first_thing_title">Первое дело дня</string>
+    <string name="notif_evening_title">Вечерний чек-ин</string>
+    <string name="notif_evening_text">Время отметить привычки за день.</string>
+    <string name="notif_streak_title">Стрик под угрозой</string>
+    <string name="notif_streak_text">«%1$s»: стрик %2$d дн. Не забудьте отметиться сегодня.</string>
+    <string name="notif_weekly_title">Итоги недели</string>
+    <string name="notif_weekly_text">На сегодня выполнено: %1$d. Так держать!</string>
+    <string name="notif_deadline_title">Дедлайн близко</string>
+    <string name="notif_deadline_text">Дедлайн цели «%1$s» через %2$d дн.</string>
+
+    <!-- Notification settings screen -->
+    <string name="notif_settings_title">Уведомления</string>
+    <string name="notif_master_title">Все уведомления</string>
+    <string name="notif_time_label">Время: %1$s</string>
+    <string name="notif_dnd_title">Не беспокоить</string>
+    <string name="notif_dnd_start">С 22:00</string>
+    <string name="notif_dnd_end">До 07:00</string>
+    <string name="notif_type_morning">Утренний brief</string>
+    <string name="notif_type_morning_desc">Сводка задач и привычек на день</string>
+    <string name="notif_type_first_thing">Первое дело дня</string>
+    <string name="notif_type_first_thing_desc">Напоминание о первой задаче</string>
+    <string name="notif_type_evening">Вечерний чек-ин</string>
+    <string name="notif_type_evening_desc">Отметить привычки за день</string>
+    <string name="notif_type_streak">Предупреждение стрика</string>
+    <string name="notif_type_streak_desc">Если длинный стрик под угрозой</string>
+    <string name="notif_type_weekly">Итог недели</string>
+    <string name="notif_type_weekly_desc">Краткая статистика в воскресенье</string>
+    <string name="notif_type_deadline">Дедлайн цели</string>
+    <string name="notif_type_deadline_desc">За 1 и 3 дня до дедлайна</string>
 
     <!-- Habits -->
     <string name="habits_title">Привычки</string>
@@ -184,6 +264,19 @@
     <string name="dashboard_title">Дашборд</string>
     <string name="dashboard_empty_title">Графики появятся позже</string>
     <string name="dashboard_empty_subtitle">Когда накопятся данные о задачах и привычках, здесь будут стрики, тепловые карты и прогресс.</string>
+    <string name="dashboard_summary_habits">%d привычек сегодня</string>
+    <string name="dashboard_section_streaks">Активные стрики</string>
+    <string name="dashboard_section_heatmaps">Тепловая карта привычек</string>
+    <string name="dashboard_section_goals">Прогресс по целям</string>
+    <string name="dashboard_section_period">Статистика за период</string>
+    <string name="dashboard_period_week">Неделя</string>
+    <string name="dashboard_period_month">Месяц</string>
+    <string name="dashboard_period_year">Год</string>
+    <string name="dashboard_stat_tasks">Задач</string>
+    <string name="dashboard_stat_habit_done">Отметок ✓</string>
+    <string name="dashboard_stat_habit_failed">Срывов</string>
+    <string name="dashboard_stat_best_day">Лучший день</string>
+    <string name="dashboard_stat_avg">В среднем/день</string>
 
     <!-- Generic actions -->
     <string name="action_settings">Настройки</string>

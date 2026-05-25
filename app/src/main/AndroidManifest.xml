@@ -31,5 +31,49 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Уведомления: действия из шторки, точные алармы, пересоздание после reboot -->
+        <receiver
+            android:name=".core.notification.receiver.NotificationActionReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".core.notification.receiver.AlarmReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".core.notification.receiver.BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Виджет «Сегодня» (Jetpack Glance) -->
+        <receiver
+            android:name=".widget.TodayWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/today_widget_info" />
+        </receiver>
+
+        <!-- Hilt сам предоставляет WorkManager Configuration через Configuration.Provider,
+             поэтому отключаем дефолтный инициализатор WorkManager. -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
     </application>
 </manifest>

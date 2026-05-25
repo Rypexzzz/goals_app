@@ -19,6 +19,7 @@ import com.aim.app.presentation.screens.goaldetail.GoalDetailScreen
 import com.aim.app.presentation.screens.goals.GoalsScreen
 import com.aim.app.presentation.screens.habitdetail.HabitDetailScreen
 import com.aim.app.presentation.screens.habits.HabitsScreen
+import com.aim.app.presentation.screens.notificationsettings.NotificationSettingsScreen
 import com.aim.app.presentation.screens.settings.SettingsScreen
 import com.aim.app.presentation.screens.taskdetail.TaskDetailScreen
 import com.aim.app.presentation.screens.today.TodayScreen
@@ -50,6 +51,7 @@ fun AimNavHost(
     val openHabit: (Long) -> Unit = { habitId -> navController.navigate(AimRoute.HabitDetail(habitId)) }
     val openTrash: () -> Unit = { navController.navigate(AimRoute.Trash) }
     val openArchive: () -> Unit = { navController.navigate(AimRoute.Archive) }
+    val openNotificationSettings: () -> Unit = { navController.navigate(AimRoute.NotificationSettings) }
 
     NavHost(
         navController = navController,
@@ -78,7 +80,11 @@ fun AimNavHost(
             )
         }
         composable<AimRoute.Dashboard> {
-            DashboardScreen(onSettingsClick = openSettings)
+            DashboardScreen(
+                onSettingsClick = openSettings,
+                onOpenHabit = openHabit,
+                onOpenGoal = openGoal,
+            )
         }
         composable<AimRoute.Settings>(
             enterTransition = pushEnter,
@@ -90,7 +96,16 @@ fun AimNavHost(
                 onBack = { navController.popBackStack() },
                 onOpenArchive = openArchive,
                 onOpenTrash = openTrash,
+                onOpenNotificationSettings = openNotificationSettings,
             )
+        }
+        composable<AimRoute.NotificationSettings>(
+            enterTransition = pushEnter,
+            exitTransition = pushExit,
+            popEnterTransition = popEnter,
+            popExitTransition = popExit,
+        ) {
+            NotificationSettingsScreen(onBack = { navController.popBackStack() })
         }
         composable<AimRoute.GoalDetail>(
             enterTransition = pushEnter,

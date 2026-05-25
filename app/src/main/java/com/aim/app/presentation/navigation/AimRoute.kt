@@ -37,4 +37,7 @@ sealed interface AimRoute {
 
     @Serializable
     data object Archive : AimRoute
+
+    @Serializable
+    data object NotificationSettings : AimRoute
 }

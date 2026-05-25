@@ -32,4 +32,7 @@ interface GoalRepository {
     suspend fun reorder(orderedIds: List<Long>)
 
     suspend fun permanentlyDelete(goalId: Long)
+
+    /** Окончательно удалить цели в корзине, удалённые раньше [threshold]. Возвращает число удалённых. */
+    suspend fun purgeDeletedBefore(threshold: java.time.Instant): Int
 }

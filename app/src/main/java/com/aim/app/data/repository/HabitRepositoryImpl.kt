@@ -50,6 +50,9 @@ class HabitRepositoryImpl @Inject constructor(
         dao.observeCheckInsInRange(habitId, startInclusive.toString(), endInclusive.toString())
             .map { list -> list.map { it.toDomain() } }
 
+    override fun observeAllCheckIns(): Flow<List<HabitCheckIn>> =
+        dao.observeAllCheckIns().map { list -> list.map { it.toDomain() } }
+
     override suspend fun createHabit(habit: Habit): Long {
         val nextOrder = dao.maxOrderIndex() + 1
         val entity = habit.copy(orderIndex = nextOrder).toEntity().copy(id = 0)
@@ -100,4 +103,15 @@ class HabitRepositoryImpl @Inject constructor(
     override suspend fun deleteCheckIn(habitId: Long, date: LocalDate) {
         dao.deleteCheckIn(habitId, date.toString())
     }
+
+    override suspend fun getCheckInStatus(
+        habitId: Long,
+        date: LocalDate,
+    ): com.aim.app.domain.model.CheckInStatus? {
+        val raw = dao.getCheckIn(habitId, date.toString())?.status ?: return null
+        return runCatching { com.aim.app.domain.model.CheckInStatus.valueOf(raw) }.getOrNull()
+    }
+
+    override suspend fun purgeDeletedBefore(threshold: java.time.Instant): Int =
+        dao.purgeDeletedBefore(threshold.toEpochMilli())
 }

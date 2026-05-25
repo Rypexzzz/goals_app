@@ -125,4 +125,16 @@ interface GoalDao {
 
     @Query("DELETE FROM goals WHERE id = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("DELETE FROM goals WHERE deleted_at IS NOT NULL AND deleted_at < :threshold")
+    suspend fun purgeDeletedBefore(threshold: Long): Int
+
+    @Query("SELECT * FROM goals")
+    suspend fun getAllOnce(): List<GoalEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(goals: List<GoalEntity>)
+
+    @Query("DELETE FROM goals")
+    suspend fun clear()
 }

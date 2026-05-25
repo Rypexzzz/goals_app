@@ -28,6 +28,9 @@ interface HabitRepository {
         endInclusive: LocalDate,
     ): Flow<List<HabitCheckIn>>
 
+    /** Все отметки всех привычек (для экрана «Сегодня»). */
+    fun observeAllCheckIns(): Flow<List<HabitCheckIn>>
+
     suspend fun createHabit(habit: Habit): Long
 
     suspend fun updateHabit(habit: Habit)
@@ -51,4 +54,10 @@ interface HabitRepository {
 
     /** Удалить отметку за дату (вернуть в состояние «не отмечено»). */
     suspend fun deleteCheckIn(habitId: Long, date: LocalDate)
+
+    /** Статус отметки за дату (одноразовое чтение). */
+    suspend fun getCheckInStatus(habitId: Long, date: LocalDate): CheckInStatus?
+
+    /** Окончательно удалить привычки в корзине, удалённые раньше [threshold]. */
+    suspend fun purgeDeletedBefore(threshold: java.time.Instant): Int
 }
