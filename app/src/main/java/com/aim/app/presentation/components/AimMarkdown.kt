@@ -162,7 +162,7 @@ private fun parseMarkdownBlocks(raw: String): List<MarkdownBlock> =
             }
         }
 
-/** Простая обработка **жирного** и *курсива*/_курсива_ внутри строки. */
+// Простая обработка жирного (**текст**) и курсива (*текст* / _текст_) внутри строки.
 private fun renderInline(text: String): AnnotatedString = buildAnnotatedString {
     var i = 0
     while (i < text.length) {
