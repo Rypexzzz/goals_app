@@ -7,11 +7,13 @@ import com.aim.app.data.local.entity.GoalEntity
 import com.aim.app.data.local.entity.HabitCheckInEntity
 import com.aim.app.data.local.entity.HabitEntity
 import com.aim.app.data.local.entity.TaskEntity
+import com.aim.app.data.local.entity.TaskOccurrenceEntity
 
 @Database(
     entities = [
         GoalEntity::class,
         TaskEntity::class,
+        TaskOccurrenceEntity::class,
         HabitEntity::class,
         HabitCheckInEntity::class,
     ],
@@ -23,10 +25,11 @@ abstract class AimDatabase : RoomDatabase() {
 
     abstract fun goalDao(): GoalDao
     abstract fun taskDao(): TaskDao
+    abstract fun taskOccurrenceDao(): TaskOccurrenceDao
     abstract fun habitDao(): HabitDao
 
     companion object {
-        const val VERSION = 2
+        const val VERSION = 3
         const val NAME = "aim.db"
     }
 }

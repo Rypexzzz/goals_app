@@ -6,7 +6,9 @@ import com.aim.app.data.local.db.AimDatabase
 import com.aim.app.data.local.db.GoalDao
 import com.aim.app.data.local.db.HabitDao
 import com.aim.app.data.local.db.MIGRATION_1_2
+import com.aim.app.data.local.db.MIGRATION_2_3
 import com.aim.app.data.local.db.TaskDao
+import com.aim.app.data.local.db.TaskOccurrenceDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,7 +29,7 @@ object DatabaseModule {
         klass = AimDatabase::class.java,
         name = AimDatabase.NAME,
     )
-        .addMigrations(MIGRATION_1_2)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
         .build()
 
     @Provides
@@ -35,6 +37,9 @@ object DatabaseModule {
 
     @Provides
     fun provideTaskDao(db: AimDatabase): TaskDao = db.taskDao()
+
+    @Provides
+    fun provideTaskOccurrenceDao(db: AimDatabase): TaskOccurrenceDao = db.taskOccurrenceDao()
 
     @Provides
     fun provideHabitDao(db: AimDatabase): HabitDao = db.habitDao()

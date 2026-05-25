@@ -4,6 +4,31 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 /**
+ * Миграция v2 → v3: таблица `task_occurrences` для материализованных экземпляров
+ * регулярных задач. Sprint 4.
+ */
+val MIGRATION_2_3: Migration = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS task_occurrences (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                task_id INTEGER NOT NULL,
+                date TEXT NOT NULL,
+                status TEXT NOT NULL,
+                completed_at INTEGER,
+                FOREIGN KEY(task_id) REFERENCES tasks(id) ON DELETE CASCADE
+            )
+            """.trimIndent(),
+        )
+        db.execSQL(
+            "CREATE UNIQUE INDEX IF NOT EXISTS index_task_occurrences_task_id_date ON task_occurrences(task_id, date)",
+        )
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_task_occurrences_date ON task_occurrences(date)")
+    }
+}
+
+/**
  * Миграция v1 → v2: добавление таблиц `habits` и `habit_check_ins`.
  * Sprint 3.
  */

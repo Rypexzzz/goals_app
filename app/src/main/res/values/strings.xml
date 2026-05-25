@@ -12,6 +12,24 @@
     <string name="today_title">Сегодня</string>
     <string name="today_empty_title">Сегодня — чистый лист</string>
     <string name="today_empty_subtitle">Запланируй задачу или отметь привычку, и она появится здесь.</string>
+    <string name="today_section_todo">Нужно сделать</string>
+    <string name="today_section_done">Выполнено сегодня</string>
+    <string name="today_summary_done">%1$d из %2$d выполнено</string>
+    <string name="today_overdue_move_today">На сегодня</string>
+    <string name="today_overdue_move_tomorrow">На завтра</string>
+    <string name="today_action_snooze_tomorrow">Отложить на завтра</string>
+    <string name="today_action_snooze_3days">+ 3 дня</string>
+    <string name="today_action_pick_date">Изменить дату</string>
+    <string name="today_action_delete">Удалить</string>
+    <string name="today_action_open">Открыть</string>
+    <string name="today_habit_failed">Сорвался</string>
+    <string name="today_item_menu">Действия</string>
+    <plurals name="today_overdue_banner">
+        <item quantity="one">У вас %d просроченная задача</item>
+        <item quantity="few">У вас %d просроченные задачи</item>
+        <item quantity="many">У вас %d просроченных задач</item>
+        <item quantity="other">У вас %d просроченных задач</item>
+    </plurals>
 
     <!-- Goals: list & filters -->
     <string name="goals_title">Цели</string>

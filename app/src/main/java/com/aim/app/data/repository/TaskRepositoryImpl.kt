@@ -3,13 +3,18 @@ package com.aim.app.data.repository
 import androidx.room.withTransaction
 import com.aim.app.data.local.db.AimDatabase
 import com.aim.app.data.local.db.TaskDao
+import com.aim.app.data.local.db.TaskOccurrenceDao
+import com.aim.app.data.local.entity.TaskOccurrenceEntity
 import com.aim.app.data.mapper.toDomain
 import com.aim.app.data.mapper.toEntity
 import com.aim.app.domain.model.Task
+import com.aim.app.domain.model.TaskOccurrence
+import com.aim.app.domain.model.TaskStatus
 import com.aim.app.domain.repository.TaskRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.Instant
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,6 +22,7 @@ import javax.inject.Singleton
 class TaskRepositoryImpl @Inject constructor(
     private val database: AimDatabase,
     private val dao: TaskDao,
+    private val occurrenceDao: TaskOccurrenceDao,
     private val clock: () -> Instant = Instant::now,
 ) : TaskRepository {
 
@@ -28,6 +34,43 @@ class TaskRepositoryImpl @Inject constructor(
 
     override fun observeTrashedTasks(): Flow<List<Task>> =
         dao.observeTrashed().map { list -> list.map { it.toDomain() } }
+
+    override fun observeTasksScheduledFor(date: LocalDate): Flow<List<Task>> =
+        dao.observeScheduledFor(date.toString()).map { list -> list.map { it.toDomain() } }
+
+    override fun observeRecurringTasks(): Flow<List<Task>> =
+        dao.observeRecurringTasks().map { list -> list.map { it.toDomain() } }
+
+    override fun observeOverdueTasks(date: LocalDate): Flow<List<Task>> =
+        dao.observeOverdue(date.toString()).map { list -> list.map { it.toDomain() } }
+
+    override fun observeOccurrencesInRange(
+        startInclusive: LocalDate,
+        endInclusive: LocalDate,
+    ): Flow<List<TaskOccurrence>> =
+        occurrenceDao.observeInRange(startInclusive.toString(), endInclusive.toString())
+            .map { list -> list.map { it.toDomain() } }
+
+    override suspend fun rescheduleTask(taskId: Long, newDate: LocalDate?) {
+        dao.updateScheduledFor(taskId, newDate?.toString())
+    }
+
+    override suspend fun setOccurrenceCompleted(taskId: Long, date: LocalDate, completed: Boolean) {
+        if (completed) {
+            val existing = occurrenceDao.getOccurrence(taskId, date.toString())
+            occurrenceDao.upsert(
+                TaskOccurrenceEntity(
+                    id = existing?.id ?: 0,
+                    taskId = taskId,
+                    date = date.toString(),
+                    status = TaskStatus.COMPLETED.name,
+                    completedAt = clock().toEpochMilli(),
+                ),
+            )
+        } else {
+            occurrenceDao.delete(taskId, date.toString())
+        }
+    }
 
     override suspend fun createTask(task: Task): Long = database.withTransaction {
         val parentDepth = task.parentTaskId?.let { parentId ->

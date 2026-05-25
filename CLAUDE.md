@@ -17,9 +17,9 @@
 
 > Обновляй этот блок при переходе к следующему спринту.
 
-**Активный спринт:** Спринт 3 — Привычки  
-**Статус:** Sprint 1+2 завершены; Sprint 3 — Room v1→v2 миграция, HabitRepository, 15 use cases + CalculateStreakUseCase, HabitsScreen / HabitDetailScreen с календарём, HabitEditBottomSheet, связь с целью в GoalDetail написаны, ждут верификации сборкой.  
-**Следующая задача:** после первой успешной сборки — прогнать `./gradlew test` (особенно CalculateStreakUseCaseTest), проверить полный CRUD привычки + календарь + стрики, затем переход к Спринту 4 (чек-лист «Сегодня»).
+**Активный спринт:** Спринт 4 — Чек-лист «Сегодня»  
+**Статус:** Sprint 1–3 завершены; Sprint 4 — Room v2→v3 (task_occurrences), RecurrenceMatcher + HabitScheduler + GetTodayItemsUseCase, AimProgressRing, TodayScreen с overdue-баннером и секциями todo/done написаны, ждут верификации сборкой.  
+**Следующая задача:** переход к Спринту 5 (Уведомления). Swipe/DnD на «Сегодня» отложены в Sprint 8 (ADR-0018).
 
 ## 🛠️ Стек (краткая шпаргалка)
 

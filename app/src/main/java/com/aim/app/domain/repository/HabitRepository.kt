@@ -28,6 +28,9 @@ interface HabitRepository {
         endInclusive: LocalDate,
     ): Flow<List<HabitCheckIn>>
 
+    /** Все отметки всех привычек (для экрана «Сегодня»). */
+    fun observeAllCheckIns(): Flow<List<HabitCheckIn>>
+
     suspend fun createHabit(habit: Habit): Long
 
     suspend fun updateHabit(habit: Habit)

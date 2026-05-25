@@ -1,7 +1,9 @@
 package com.aim.app.domain.repository
 
 import com.aim.app.domain.model.Task
+import com.aim.app.domain.model.TaskOccurrence
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 interface TaskRepository {
 
@@ -12,6 +14,21 @@ interface TaskRepository {
 
     /** Все удалённые задачи (для экрана корзины). */
     fun observeTrashedTasks(): Flow<List<Task>>
+
+    /** Разовые задачи, запланированные на дату (для экрана «Сегодня»). */
+    fun observeTasksScheduledFor(date: LocalDate): Flow<List<Task>>
+
+    /** Все живые регулярные задачи (recurrence != null). */
+    fun observeRecurringTasks(): Flow<List<Task>>
+
+    /** Просроченные разовые задачи (scheduledFor < date, не выполнены). */
+    fun observeOverdueTasks(date: LocalDate): Flow<List<Task>>
+
+    /** Экземпляры регулярных задач в диапазоне дат. */
+    fun observeOccurrencesInRange(
+        startInclusive: LocalDate,
+        endInclusive: LocalDate,
+    ): Flow<List<TaskOccurrence>>
 
     /**
      * Создание задачи. Реализация устанавливает `depth` и `orderIndex` автоматически из parentTaskId.
@@ -28,6 +45,12 @@ interface TaskRepository {
     suspend fun markCompleted(taskId: Long)
 
     suspend fun markInProgress(taskId: Long)
+
+    /** Перенести разовую задачу на новую дату (snooze / изменить дату / убрать из расписания). */
+    suspend fun rescheduleTask(taskId: Long, newDate: LocalDate?)
+
+    /** Отметить/снять выполнение экземпляра регулярной задачи на дату. */
+    suspend fun setOccurrenceCompleted(taskId: Long, date: LocalDate, completed: Boolean)
 
     /**
      * Изменить родителя задачи. Должен проверять отсутствие циклов и ограничение глубины

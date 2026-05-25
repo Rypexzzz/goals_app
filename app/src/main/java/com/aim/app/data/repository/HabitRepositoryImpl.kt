@@ -50,6 +50,9 @@ class HabitRepositoryImpl @Inject constructor(
         dao.observeCheckInsInRange(habitId, startInclusive.toString(), endInclusive.toString())
             .map { list -> list.map { it.toDomain() } }
 
+    override fun observeAllCheckIns(): Flow<List<HabitCheckIn>> =
+        dao.observeAllCheckIns().map { list -> list.map { it.toDomain() } }
+
     override suspend fun createHabit(habit: Habit): Long {
         val nextOrder = dao.maxOrderIndex() + 1
         val entity = habit.copy(orderIndex = nextOrder).toEntity().copy(id = 0)

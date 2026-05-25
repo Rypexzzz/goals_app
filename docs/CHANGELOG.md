@@ -4,6 +4,23 @@
 
 ## [Unreleased]
 
+### Added — Sprint 4: Чек-лист «Сегодня»
+
+- **Database v3** — миграция v2 → v3: таблица `task_occurrences(task_id, date, status, completed_at)` для материализованных экземпляров регулярных задач (UNIQUE по task_id+date, FK CASCADE).
+- **Чистые матчеры (тестируемые без Android):**
+  - `RecurrenceMatcher.occursOn(recurrence, date, anchor)` — все варианты `Recurrence` (Daily / WeeklyOn / Weekly / EveryNDays / Monthly с клампом к последнему дню короткого месяца).
+  - `HabitScheduler.isDueOn(frequency, date, checkIns)` — актуальность привычки на день (README §6.4).
+- **`GetTodayItemsUseCase`** — собирает разовые задачи (`scheduledFor == today`), экземпляры регулярных задач, привычки на сегодня и просроченные задачи в `TodaySnapshot`. Сортировка задачи → привычки, внутри по времени/orderIndex; разделение todo / «выполнено сегодня».
+- **Lazy-материализация occurrences** (`SetTaskOccurrenceUseCase`) и **`RescheduleTaskUseCase`** (snooze на завтра / +3 дня / дата / снять).
+- **`AimProgressRing`** — круговой Canvas-индикатор с анимацией заполнения.
+- **Экран `TodayScreen`:** шапка с датой и сводкой (кольцо + «X из Y»), сворачиваемый баннер просроченных, секции «Нужно сделать» / «Выполнено сегодня», пружинная анимация чекбокса, меню элемента (snooze/удалить для задач, «Сорвался» для привычек).
+- **Тесты:** `RecurrenceMatcherTest` (7), `HabitSchedulerTest` (6), `GetTodayItemsUseCaseTest` (5).
+
+### Notes
+
+- **Drag-n-drop и swipe на «Сегодня» отложены в Sprint 8.** Действия — через явное меню «⋮» (надёжно, без жестов). ADR-0018.
+- Регулярная задача не дублируется: `observeScheduledFor` исключает `recurrence IS NOT NULL`.
+
 ### Added — Sprint 3: Привычки
 
 - **Database v2** — миграция v1 → v2: новые таблицы `habits` и `habit_check_ins` с индексами (date, habit_id+date unique), FK на goals с `ON DELETE SET NULL` и на habits с `ON DELETE CASCADE`. Schema-снапшот в `app/schemas/`.

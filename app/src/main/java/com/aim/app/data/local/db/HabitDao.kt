@@ -126,4 +126,8 @@ interface HabitDao {
 
     @Query("SELECT * FROM habit_check_ins WHERE habit_id = :habitId AND date = :date")
     suspend fun getCheckIn(habitId: Long, date: String): HabitCheckInEntity?
+
+    /** Все отметки всех привычек — для экрана «Сегодня» (расчёт due/done и стриков). */
+    @Query("SELECT * FROM habit_check_ins ORDER BY date ASC")
+    fun observeAllCheckIns(): Flow<List<HabitCheckInEntity>>
 }

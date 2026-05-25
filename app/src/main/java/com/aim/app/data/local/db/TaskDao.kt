@@ -92,6 +92,51 @@ interface TaskDao {
     @Query("UPDATE tasks SET status = 'IN_PROGRESS', completed_at = NULL WHERE id = :id")
     suspend fun markInProgress(id: Long)
 
+    @Query("UPDATE tasks SET scheduled_for = :date WHERE id = :id")
+    suspend fun updateScheduledFor(id: Long, date: String?)
+
+    /** Разовые (не регулярные) задачи, запланированные на конкретную дату. */
+    @Query(
+        """
+        SELECT t.* FROM tasks t
+        INNER JOIN goals g ON g.id = t.goal_id
+        WHERE t.scheduled_for = :date
+          AND t.recurrence IS NULL
+          AND t.deleted_at IS NULL
+          AND g.deleted_at IS NULL
+        ORDER BY t.scheduled_time ASC, t.order_index ASC
+        """,
+    )
+    fun observeScheduledFor(date: String): Flow<List<TaskEntity>>
+
+    /** Все живые регулярные задачи (с recurrence) — для расчёта экземпляров на лету. */
+    @Query(
+        """
+        SELECT t.* FROM tasks t
+        INNER JOIN goals g ON g.id = t.goal_id
+        WHERE t.recurrence IS NOT NULL
+          AND t.deleted_at IS NULL
+          AND g.deleted_at IS NULL
+        """,
+    )
+    fun observeRecurringTasks(): Flow<List<TaskEntity>>
+
+    /** Просроченные разовые задачи: запланированы до :date, не выполнены. */
+    @Query(
+        """
+        SELECT t.* FROM tasks t
+        INNER JOIN goals g ON g.id = t.goal_id
+        WHERE t.scheduled_for IS NOT NULL
+          AND t.scheduled_for < :date
+          AND t.recurrence IS NULL
+          AND t.status = 'IN_PROGRESS'
+          AND t.deleted_at IS NULL
+          AND g.deleted_at IS NULL
+        ORDER BY t.scheduled_for ASC
+        """,
+    )
+    fun observeOverdue(date: String): Flow<List<TaskEntity>>
+
     @Query("DELETE FROM tasks WHERE id = :id")
     suspend fun deleteById(id: Long)
 
