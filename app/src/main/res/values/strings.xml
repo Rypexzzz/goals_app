@@ -130,6 +130,8 @@
     <string name="task_action_uncomplete">В работе</string>
     <string name="task_action_edit">Редактировать</string>
     <string name="task_action_delete">Удалить</string>
+    <string name="task_delete_confirm_title">Удалить задачу?</string>
+    <string name="task_delete_confirm_message">Задача попадёт в корзину. Восстановить можно из «Настройки → Корзина».</string>
 
     <!-- Trash -->
     <string name="trash_title">Корзина</string>
