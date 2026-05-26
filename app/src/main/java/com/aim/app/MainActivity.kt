@@ -11,12 +11,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.aim.app.core.notification.NotificationScheduler
 import com.aim.app.presentation.RootViewModel
 import com.aim.app.presentation.screens.onboarding.OnboardingScreen
 import com.aim.app.presentation.theme.AimTheme
+import com.aim.app.widget.TodayWidgetSync
 import com.aim.app.widget.WidgetUpdateWorker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -27,6 +30,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var notificationScheduler: NotificationScheduler
+
+    @Inject
+    lateinit var todayWidgetSync: TodayWidgetSync
 
     private val rootViewModel: RootViewModel by viewModels()
 
@@ -40,6 +46,12 @@ class MainActivity : ComponentActivity() {
         }
         // Периодическое обновление виджета (полночь + каждые 30 мин).
         WidgetUpdateWorker.enqueue(applicationContext)
+        // Пока приложение на переднем плане — мгновенно отражаем изменения в виджете.
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                todayWidgetSync.keepInSync()
+            }
+        }
 
         setContent {
             val themeMode by rootViewModel.themeMode.collectAsStateWithLifecycle()

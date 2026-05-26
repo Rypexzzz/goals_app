@@ -11,6 +11,7 @@ import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.CheckBox
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
@@ -29,6 +30,7 @@ import androidx.glance.layout.padding
 import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
+import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import com.aim.app.MainActivity
 import com.aim.app.domain.model.TodayItem
@@ -114,32 +116,31 @@ class TodayWidget : GlanceAppWidget() {
     @Composable
     private fun WidgetRow(item: TodayItem) {
         val context = LocalContext.current
+        // Без вложенных clickable: чекбокс отмечает выполнение, тап по тексту открывает приложение.
         Row(
             modifier = GlanceModifier
                 .fillMaxWidth()
-                .padding(vertical = 6.dp)
-                .clickable(actionStartActivity(Intent(context, MainActivity::class.java))),
+                .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = if (item.isDone) "✓" else "○",
-                style = TextStyle(
-                    color = if (item.isDone) GlanceTheme.colors.primary else GlanceTheme.colors.onSurfaceVariant,
-                    fontWeight = FontWeight.Bold,
+            CheckBox(
+                checked = item.isDone,
+                onCheckedChange = actionRunCallback<ToggleWidgetItemAction>(
+                    actionParametersOf(ToggleWidgetItemAction.itemKeyParam to item.stableKey),
                 ),
-                modifier = GlanceModifier
-                    .padding(end = 10.dp)
-                    .clickable(
-                        actionRunCallback<ToggleWidgetItemAction>(
-                            actionParametersOf(ToggleWidgetItemAction.itemKeyParam to item.stableKey),
-                        ),
-                    ),
             )
+            Spacer(GlanceModifier.width(6.dp))
             val prefix = if (item.emoji != null) "${item.emoji} " else ""
             Text(
                 text = prefix + item.title,
-                maxLines = 1,
-                style = TextStyle(color = GlanceTheme.colors.onSurface),
+                maxLines = 2,
+                style = TextStyle(
+                    color = GlanceTheme.colors.onSurface,
+                    textDecoration = if (item.isDone) TextDecoration.LineThrough else TextDecoration.None,
+                ),
+                modifier = GlanceModifier
+                    .defaultWeight()
+                    .clickable(actionStartActivity(Intent(context, MainActivity::class.java))),
             )
         }
     }
