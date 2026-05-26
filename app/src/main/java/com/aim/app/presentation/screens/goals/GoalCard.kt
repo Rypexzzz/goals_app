@@ -3,11 +3,11 @@ package com.aim.app.presentation.screens.goals
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -44,45 +44,37 @@ fun GoalCard(
     modifier: Modifier = Modifier,
 ) {
     AimCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .heightIn(min = 140.dp),
+        modifier = modifier.fillMaxWidth(),
         onClick = onClick,
+        contentPadding = PaddingValues(16.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             if (!goal.emoji.isNullOrEmpty()) {
                 Text(text = goal.emoji, fontSize = 28.sp)
-                Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(14.dp))
             }
-            Text(
+            Column(
                 modifier = Modifier.weight(1f),
-                text = goal.title,
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-        Spacer(Modifier.height(4.dp))
-        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            if (goal.status == GoalStatus.COMPLETED) {
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
                 Text(
-                    text = stringResource(R.string.goals_card_completed),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.tertiary,
-                )
-            }
-            if (goal.deadline != null) {
-                DeadlineLabel(deadline = goal.deadline)
-            }
-            if (!goal.description.isNullOrEmpty()) {
-                Text(
-                    text = goal.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
+                    text = goal.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
+                when {
+                    goal.status == GoalStatus.COMPLETED -> Text(
+                        text = stringResource(R.string.goals_card_completed),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.tertiary,
+                    )
+                    goal.deadline != null -> DeadlineLabel(deadline = goal.deadline)
+                }
             }
         }
     }

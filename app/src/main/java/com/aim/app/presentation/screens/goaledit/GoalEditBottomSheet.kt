@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,6 +56,12 @@ fun GoalEditBottomSheet(
 
     LaunchedEffect(state.saved) {
         if (state.saved) onDismiss()
+    }
+
+    // Лист переиспользует один и тот же keyed-ViewModel, поэтому при закрытии очищаем форму,
+    // иначе повторное открытие покажет старые данные и флаг saved=true мгновенно закроет лист.
+    DisposableEffect(Unit) {
+        onDispose { viewModel.onReset() }
     }
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)

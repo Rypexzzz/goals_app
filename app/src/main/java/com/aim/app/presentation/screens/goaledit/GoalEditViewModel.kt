@@ -26,14 +26,24 @@ class GoalEditViewModel @AssistedInject constructor(
     private val observeGoal: ObserveGoalUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(
-        GoalEditUiState(isLoading = mode is GoalEditMode.Edit, isExisting = mode is GoalEditMode.Edit),
-    )
+    private val _uiState = MutableStateFlow(GoalEditUiState())
     val uiState: StateFlow<GoalEditUiState> = _uiState.asStateFlow()
 
     private var editingGoal: Goal? = null
 
     init {
+        load()
+    }
+
+    /** Сброс формы при закрытии листа: для Create — пусто, для Edit — перечитать из БД. */
+    fun onReset() = load()
+
+    private fun load() {
+        editingGoal = null
+        _uiState.value = GoalEditUiState(
+            isLoading = mode is GoalEditMode.Edit,
+            isExisting = mode is GoalEditMode.Edit,
+        )
         if (mode is GoalEditMode.Edit) {
             viewModelScope.launch {
                 val goal = observeGoal(mode.goalId).firstOrNull()
