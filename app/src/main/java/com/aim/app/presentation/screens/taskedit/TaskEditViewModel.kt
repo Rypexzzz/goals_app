@@ -28,14 +28,24 @@ class TaskEditViewModel @AssistedInject constructor(
     private val observeTask: ObserveTaskUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(
-        TaskEditUiState(isLoading = mode is TaskEditMode.Edit, isExisting = mode is TaskEditMode.Edit),
-    )
+    private val _uiState = MutableStateFlow(TaskEditUiState())
     val uiState: StateFlow<TaskEditUiState> = _uiState.asStateFlow()
 
     private var editingTask: Task? = null
 
     init {
+        load()
+    }
+
+    /** Сброс формы при закрытии листа: для Create — пусто, для Edit — перечитать из БД. */
+    fun onReset() = load()
+
+    private fun load() {
+        editingTask = null
+        _uiState.value = TaskEditUiState(
+            isLoading = mode is TaskEditMode.Edit,
+            isExisting = mode is TaskEditMode.Edit,
+        )
         if (mode is TaskEditMode.Edit) {
             viewModelScope.launch {
                 val task = observeTask(mode.taskId).firstOrNull()

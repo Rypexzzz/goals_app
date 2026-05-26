@@ -26,18 +26,25 @@ class HabitEditViewModel @AssistedInject constructor(
     private val observeHabit: ObserveHabitUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(
-        HabitEditUiState(
-            isLoading = mode is HabitEditMode.Edit,
-            isExisting = mode is HabitEditMode.Edit,
-            goalId = (mode as? HabitEditMode.Create)?.goalId,
-        ),
-    )
+    private val _uiState = MutableStateFlow(HabitEditUiState())
     val uiState: StateFlow<HabitEditUiState> = _uiState.asStateFlow()
 
     private var editingHabit: Habit? = null
 
     init {
+        load()
+    }
+
+    /** Сброс формы при закрытии листа: для Create — пусто, для Edit — перечитать из БД. */
+    fun onReset() = load()
+
+    private fun load() {
+        editingHabit = null
+        _uiState.value = HabitEditUiState(
+            isLoading = mode is HabitEditMode.Edit,
+            isExisting = mode is HabitEditMode.Edit,
+            goalId = (mode as? HabitEditMode.Create)?.goalId,
+        )
         if (mode is HabitEditMode.Edit) {
             viewModelScope.launch {
                 val habit = observeHabit(mode.habitId).firstOrNull()
