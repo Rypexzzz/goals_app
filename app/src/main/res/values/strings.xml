@@ -110,8 +110,11 @@
     <string name="task_edit_field_description">Описание</string>
     <string name="task_edit_field_description_hint">Контекст, ссылки, заметки.</string>
     <string name="task_edit_field_scheduled_for">Запланирована на</string>
+    <string name="task_edit_scheduled_for_hint">Когда показать в «Сегодня»</string>
+    <string name="field_date_not_set">Не выбрано</string>
     <string name="task_edit_field_scheduled_time">Время</string>
     <string name="task_edit_field_deadline">Дедлайн</string>
+    <string name="task_edit_deadline_hint">Крайний срок, к которому надо успеть</string>
     <string name="task_edit_field_recurrence">Повторение</string>
     <string name="task_edit_recurrence_none">Без повторения</string>
     <string name="task_edit_recurrence_daily">Каждый день</string>
@@ -241,8 +244,18 @@
     <string name="habit_frequency_times_per_week">Раз в неделю</string>
     <string name="habit_frequency_times_per_month">Раз в месяц</string>
     <string name="habit_frequency_specific_days">Конкретные дни</string>
-    <string name="habit_frequency_times_suffix_week">раз в неделю</string>
-    <string name="habit_frequency_times_suffix_month">раз в месяц</string>
+    <plurals name="habit_times_week">
+        <item quantity="one">%d раз в неделю</item>
+        <item quantity="few">%d раза в неделю</item>
+        <item quantity="many">%d раз в неделю</item>
+        <item quantity="other">%d раза в неделю</item>
+    </plurals>
+    <plurals name="habit_times_month">
+        <item quantity="one">%d раз в месяц</item>
+        <item quantity="few">%d раза в месяц</item>
+        <item quantity="many">%d раз в месяц</item>
+        <item quantity="other">%d раза в месяц</item>
+    </plurals>
 
     <!-- Habit detail -->
     <string name="habit_detail_delete_title">Удалить привычку?</string>

@@ -90,22 +90,27 @@ fun AimMarkdownEditor(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String? = null,
-    minHeight: Dp = 120.dp,
+    minHeight: Dp = 96.dp,
 ) {
-    var previewMode by remember { mutableStateOf(false) }
+    var previewRequested by remember { mutableStateOf(false) }
+    // Превью имеет смысл только при наличии текста — иначе кнопка висит над пустым полем.
+    val canPreview = value.isNotBlank()
+    val previewMode = previewRequested && canPreview
 
     Column(modifier = modifier) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            TextButton(onClick = { previewMode = !previewMode }) {
-                Text(
-                    text = if (previewMode) stringResource(R.string.markdown_edit)
-                    else stringResource(R.string.markdown_preview),
-                    style = MaterialTheme.typography.labelLarge,
-                )
+        if (canPreview) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                TextButton(onClick = { previewRequested = !previewRequested }) {
+                    Text(
+                        text = if (previewMode) stringResource(R.string.markdown_edit)
+                        else stringResource(R.string.markdown_preview),
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                }
             }
         }
         AnimatedContent(targetState = previewMode, label = "MarkdownEditorMode") { isPreview ->

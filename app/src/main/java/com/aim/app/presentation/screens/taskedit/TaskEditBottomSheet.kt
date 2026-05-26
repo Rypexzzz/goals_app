@@ -3,6 +3,7 @@ package com.aim.app.presentation.screens.taskedit
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -151,15 +152,20 @@ private fun TaskEditContent(
             )
         }
 
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(
                 text = stringResource(R.string.task_edit_field_scheduled_for),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            Text(
+                text = stringResource(R.string.task_edit_scheduled_for_hint),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 TextButton(onClick = { scheduledDateOpen = true }) {
-                    Text(state.scheduledFor?.let(dateFormatter::format) ?: stringResource(R.string.goal_edit_field_no_deadline))
+                    Text(state.scheduledFor?.let(dateFormatter::format) ?: stringResource(R.string.field_date_not_set))
                 }
                 if (state.scheduledFor != null) {
                     TextButton(onClick = { onScheduledForChange(null) }) {
@@ -169,15 +175,20 @@ private fun TaskEditContent(
             }
         }
 
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(
                 text = stringResource(R.string.task_edit_field_deadline),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            Text(
+                text = stringResource(R.string.task_edit_deadline_hint),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 TextButton(onClick = { deadlineOpen = true }) {
-                    Text(state.deadline?.let(dateFormatter::format) ?: stringResource(R.string.goal_edit_field_no_deadline))
+                    Text(state.deadline?.let(dateFormatter::format) ?: stringResource(R.string.field_date_not_set))
                 }
                 if (state.deadline != null) {
                     TextButton(onClick = { onDeadlineChange(null) }) {
@@ -193,7 +204,10 @@ private fun TaskEditContent(
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
                 AimChip(
                     selected = state.recurrence == null,
                     onClick = { onRecurrenceChange(null) },

@@ -5,12 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -195,7 +197,10 @@ private fun FrequencySection(
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
             AimChip(
                 selected = current == HabitFrequency.Daily,
                 onClick = { onChange(HabitFrequency.Daily) },
@@ -229,13 +234,13 @@ private fun FrequencySection(
                 value = freq.times,
                 range = 1..7,
                 onChange = { onChange(HabitFrequency.TimesPerWeek(it)) },
-                suffix = stringResource(R.string.habit_frequency_times_suffix_week),
+                label = pluralStringResource(R.plurals.habit_times_week, freq.times, freq.times),
             )
             is HabitFrequency.TimesPerMonth -> TimesPicker(
                 value = freq.times,
                 range = 1..31,
                 onChange = { onChange(HabitFrequency.TimesPerMonth(it)) },
-                suffix = stringResource(R.string.habit_frequency_times_suffix_month),
+                label = pluralStringResource(R.plurals.habit_times_month, freq.times, freq.times),
             )
             is HabitFrequency.SpecificDays -> DaysPicker(
                 selected = freq.days,
@@ -251,13 +256,13 @@ private fun TimesPicker(
     value: Int,
     range: IntRange,
     onChange: (Int) -> Unit,
-    suffix: String,
+    label: String,
     modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         TextButton(onClick = { if (value > range.first) onChange(value - 1) }) { Text("−") }
         Text(
-            text = "$value $suffix",
+            text = label,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface,
         )
@@ -272,7 +277,11 @@ private fun DaysPicker(
     modifier: Modifier = Modifier,
 ) {
     val locale = remember { Locale("ru") }
-    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+    FlowRow(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
         DayOfWeek.entries.forEach { day ->
             val isSelected = day in selected
             val label = day.getDisplayName(TextStyle.SHORT, locale)
