@@ -44,6 +44,9 @@ class TaskRepositoryImpl @Inject constructor(
     override fun observeOverdueTasks(date: LocalDate): Flow<List<Task>> =
         dao.observeOverdue(date.toString()).map { list -> list.map { it.toDomain() } }
 
+    override fun observeTasksWithDeadline(): Flow<List<Task>> =
+        dao.observeWithDeadline().map { list -> list.map { it.toDomain() } }
+
     override fun observeOccurrencesInRange(
         startInclusive: LocalDate,
         endInclusive: LocalDate,

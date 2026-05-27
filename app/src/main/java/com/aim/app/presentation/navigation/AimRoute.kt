@@ -21,6 +21,9 @@ sealed interface AimRoute {
     data object Dashboard : AimRoute
 
     @Serializable
+    data object Tasks : AimRoute
+
+    @Serializable
     data object Settings : AimRoute
 
     @Serializable

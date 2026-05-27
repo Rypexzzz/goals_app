@@ -5,9 +5,16 @@
 
     <!-- Bottom navigation -->
     <string name="bottom_today">Сегодня</string>
+    <string name="bottom_tasks">Задачи</string>
     <string name="bottom_goals">Цели</string>
     <string name="bottom_habits">Привычки</string>
     <string name="bottom_dashboard">Дашборд</string>
+
+    <!-- Tasks screen -->
+    <string name="tasks_title">Задачи</string>
+    <string name="tasks_overdue">Просрочено</string>
+    <string name="tasks_empty_title">Задач со сроком нет</string>
+    <string name="tasks_empty_subtitle">Здесь появятся задачи с дедлайном — ближайшие сверху.</string>
 
     <!-- Today screen -->
     <string name="today_title">Сегодня</string>

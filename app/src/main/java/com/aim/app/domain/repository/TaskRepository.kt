@@ -26,6 +26,9 @@ interface TaskRepository {
     /** Просроченные разовые задачи (scheduledFor < date, не выполнены). */
     fun observeOverdueTasks(date: LocalDate): Flow<List<Task>>
 
+    /** Все живые задачи с дедлайном (из активных целей), отсортированные по дате дедлайна. */
+    fun observeTasksWithDeadline(): Flow<List<Task>>
+
     /** Экземпляры регулярных задач в диапазоне дат. */
     fun observeOccurrencesInRange(
         startInclusive: LocalDate,

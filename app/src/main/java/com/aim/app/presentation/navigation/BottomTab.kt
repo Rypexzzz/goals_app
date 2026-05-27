@@ -6,6 +6,7 @@ import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.Insights
 import androidx.compose.material.icons.outlined.Loop
+import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.aim.app.R
 import kotlin.reflect.KClass
@@ -29,6 +30,12 @@ val BottomTabs: List<BottomTab> = listOf(
         routeClass = AimRoute.Today::class,
         labelRes = R.string.bottom_today,
         icon = Icons.Outlined.Checklist,
+    ),
+    BottomTab(
+        route = AimRoute.Tasks,
+        routeClass = AimRoute.Tasks::class,
+        labelRes = R.string.bottom_tasks,
+        icon = Icons.Outlined.TaskAlt,
     ),
     BottomTab(
         route = AimRoute.Goals,

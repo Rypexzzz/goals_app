@@ -78,6 +78,7 @@ private fun NavHostController.switchTab(tab: BottomTab) {
     }
     when (val route = tab.route) {
         AimRoute.Today -> navigate(route, applyTabOptions)
+        AimRoute.Tasks -> navigate(route, applyTabOptions)
         AimRoute.Goals -> navigate(route, applyTabOptions)
         AimRoute.Habits -> navigate(route, applyTabOptions)
         AimRoute.Dashboard -> navigate(route, applyTabOptions)
