@@ -236,7 +236,6 @@ private fun GoalDetailContent(
                         onDelete = { taskPendingDelete = it },
                         onReorderSiblings = onReorderSiblings,
                     ),
-                    indentPerLevel = 8.dp,
                 )
             }
 
