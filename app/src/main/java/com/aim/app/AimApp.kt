@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -34,6 +35,9 @@ fun AimApp() {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        // Системные инсеты обрабатывают сами экраны (их TopAppBar) и нижняя навигация —
+        // иначе статус-бар учитывался бы дважды и над хэдером появлялась пустая полоса.
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             AnimatedVisibility(
                 visible = showBottomBar,
