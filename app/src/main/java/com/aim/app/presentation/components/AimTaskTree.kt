@@ -43,7 +43,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
@@ -137,7 +140,8 @@ private fun TaskRow(
     } else {
         Color.Transparent
     }
-    val indentDp = (task.depth * 16).dp
+    val nestingAccent = MaterialTheme.colorScheme.outlineVariant
+    val showNestingBar = task.depth > 0
 
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -146,8 +150,16 @@ private fun TaskRow(
     ) {
         Row(
             modifier = Modifier
-                .padding(start = indentDp)
                 .clip(MaterialTheme.shapes.medium)
+                .drawBehind {
+                    if (showNestingBar) {
+                        drawRect(
+                            color = nestingAccent,
+                            topLeft = Offset(0f, size.height * 0.2f),
+                            size = Size(2.dp.toPx(), size.height * 0.6f),
+                        )
+                    }
+                }
                 .clickable { callbacks.onTap(task) }
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -176,15 +188,6 @@ private fun TaskRow(
                 overflow = TextOverflow.Ellipsis,
                 textDecoration = if (completed) TextDecoration.LineThrough else null,
             )
-            if (task.canHaveSubtasks) {
-                IconButton(onClick = { callbacks.onAddSubtask(task) }) {
-                    Icon(
-                        imageVector = Icons.Outlined.Add,
-                        contentDescription = stringResource(R.string.task_action_add_subtask),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
             Box {
                 var menuOpen by remember { mutableStateOf(false) }
                 IconButton(onClick = { menuOpen = true }) {
@@ -199,6 +202,13 @@ private fun TaskRow(
                     onDismissRequest = { menuOpen = false },
                     containerColor = MaterialTheme.colorScheme.surface,
                 ) {
+                    if (task.canHaveSubtasks) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.task_action_add_subtask)) },
+                            onClick = { menuOpen = false; callbacks.onAddSubtask(task) },
+                            leadingIcon = { Icon(Icons.Outlined.Add, contentDescription = null) },
+                        )
+                    }
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.task_action_edit)) },
                         onClick = { menuOpen = false; callbacks.onEdit(task) },
@@ -223,7 +233,7 @@ private fun TaskRow(
                 }
             }
             Icon(
-                modifier = dragHandleModifier.padding(start = 4.dp, end = 4.dp).size(20.dp),
+                modifier = dragHandleModifier.padding(horizontal = 2.dp).size(18.dp),
                 imageVector = Icons.Outlined.DragIndicator,
                 contentDescription = stringResource(R.string.task_action_reorder),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
