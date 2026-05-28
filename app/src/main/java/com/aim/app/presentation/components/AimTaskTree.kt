@@ -137,7 +137,7 @@ private fun TaskRow(
     } else {
         Color.Transparent
     }
-    val indentDp = (task.depth * 16).dp
+    val indentDp = (task.depth * 10).dp
 
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -176,15 +176,6 @@ private fun TaskRow(
                 overflow = TextOverflow.Ellipsis,
                 textDecoration = if (completed) TextDecoration.LineThrough else null,
             )
-            if (task.canHaveSubtasks) {
-                IconButton(onClick = { callbacks.onAddSubtask(task) }) {
-                    Icon(
-                        imageVector = Icons.Outlined.Add,
-                        contentDescription = stringResource(R.string.task_action_add_subtask),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
             Box {
                 var menuOpen by remember { mutableStateOf(false) }
                 IconButton(onClick = { menuOpen = true }) {
@@ -199,6 +190,13 @@ private fun TaskRow(
                     onDismissRequest = { menuOpen = false },
                     containerColor = MaterialTheme.colorScheme.surface,
                 ) {
+                    if (task.canHaveSubtasks) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.task_action_add_subtask)) },
+                            onClick = { menuOpen = false; callbacks.onAddSubtask(task) },
+                            leadingIcon = { Icon(Icons.Outlined.Add, contentDescription = null) },
+                        )
+                    }
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.task_action_edit)) },
                         onClick = { menuOpen = false; callbacks.onEdit(task) },
@@ -223,7 +221,7 @@ private fun TaskRow(
                 }
             }
             Icon(
-                modifier = dragHandleModifier.padding(start = 4.dp, end = 4.dp).size(20.dp),
+                modifier = dragHandleModifier.padding(horizontal = 2.dp).size(18.dp),
                 imageVector = Icons.Outlined.DragIndicator,
                 contentDescription = stringResource(R.string.task_action_reorder),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
