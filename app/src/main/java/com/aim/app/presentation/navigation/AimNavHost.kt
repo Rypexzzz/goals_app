@@ -22,6 +22,7 @@ import com.aim.app.presentation.screens.habits.HabitsScreen
 import com.aim.app.presentation.screens.notificationsettings.NotificationSettingsScreen
 import com.aim.app.presentation.screens.settings.SettingsScreen
 import com.aim.app.presentation.screens.taskdetail.TaskDetailScreen
+import com.aim.app.presentation.screens.tasks.TasksScreen
 import com.aim.app.presentation.screens.today.TodayScreen
 import com.aim.app.presentation.screens.trash.TrashScreen
 
@@ -64,6 +65,9 @@ fun AimNavHost(
     ) {
         composable<AimRoute.Today> {
             TodayScreen(onSettingsClick = openSettings)
+        }
+        composable<AimRoute.Tasks> {
+            TasksScreen(onSettingsClick = openSettings, onTaskClick = openTask)
         }
         composable<AimRoute.Goals> {
             GoalsScreen(

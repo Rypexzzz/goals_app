@@ -47,6 +47,21 @@ interface TaskDao {
     )
     fun observeTrashed(): Flow<List<TaskEntity>>
 
+    // Все живые задачи с дедлайном из активных целей (не в корзине, не в архиве),
+    // отсортированные по дате дедлайна. ISO-строки дат сортируются хронологически.
+    @Query(
+        """
+        SELECT t.* FROM tasks t
+        INNER JOIN goals g ON g.id = t.goal_id
+        WHERE t.deleted_at IS NULL
+          AND t.deadline IS NOT NULL
+          AND g.deleted_at IS NULL
+          AND g.archived_at IS NULL
+        ORDER BY t.deadline ASC
+        """,
+    )
+    fun observeWithDeadline(): Flow<List<TaskEntity>>
+
     @Query(
         """
         SELECT COALESCE(MAX(order_index), -1) FROM tasks
