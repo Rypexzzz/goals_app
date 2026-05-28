@@ -80,10 +80,14 @@ fun AimTaskTree(
     expandedIds: Set<Long>,
     callbacks: TaskTreeCallbacks,
     modifier: Modifier = Modifier,
-    indentPerLevel: Dp = 0.dp,
+    indentPerLevel: Dp = 8.dp,
 ) {
     val sourceItems = remember(roots, expandedIds) { flattenVisible(roots, expandedIds) }
     var items by remember(sourceItems) { mutableStateOf(sourceItems) }
+    // Глубина «корня» показанного дерева. На экране цели это 0, на экране задачи — depth открытой
+    // задачи + 1. Отступ считаем относительно этого корня: прямые потомки без отступа, внуки и
+    // глубже — с отступом по indentPerLevel при раскрытии через ▾.
+    val rootBaseDepth = roots.firstOrNull()?.task?.depth ?: 0
 
     LaunchedEffect(sourceItems) { items = sourceItems }
 
@@ -118,6 +122,7 @@ fun AimTaskTree(
                     callbacks = callbacks,
                     dragHandleModifier = Modifier.draggableHandle(),
                     indentPerLevel = indentPerLevel,
+                    rootBaseDepth = rootBaseDepth,
                 )
             }
         }
@@ -132,6 +137,7 @@ private fun TaskRow(
     callbacks: TaskTreeCallbacks,
     dragHandleModifier: Modifier,
     indentPerLevel: Dp = 0.dp,
+    rootBaseDepth: Int = 0,
     modifier: Modifier = Modifier,
 ) {
     val task = node.task
@@ -141,7 +147,10 @@ private fun TaskRow(
     } else {
         Color.Transparent
     }
-    val indentDp = indentPerLevel * task.depth
+    // Прямые «корни» показанного дерева идут без отступа (relativeDepth = 0),
+    // глубже — по indentPerLevel на уровень.
+    val relativeDepth = (task.depth - rootBaseDepth).coerceAtLeast(0)
+    val indentDp = indentPerLevel * relativeDepth
 
     Surface(
         modifier = modifier.fillMaxWidth(),
