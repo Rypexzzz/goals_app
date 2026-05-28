@@ -21,9 +21,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DragIndicator
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -63,7 +67,8 @@ data class TaskTreeCallbacks(
     val onToggleCompletion: (Task) -> Unit,
     val onToggleExpand: (Long) -> Unit,
     val onAddSubtask: (Task) -> Unit,
-    val onMore: (Task) -> Unit,
+    val onEdit: (Task) -> Unit,
+    val onDelete: (Task) -> Unit,
     /** Вызывается с упорядоченным списком id братьев одного уровня — для коммита `orderIndex` в БД. */
     val onReorderSiblings: (parentTaskId: Long?, orderedIds: List<Long>) -> Unit,
 )
@@ -180,12 +185,42 @@ private fun TaskRow(
                     )
                 }
             }
-            IconButton(onClick = { callbacks.onMore(task) }) {
-                Icon(
-                    imageVector = Icons.Outlined.MoreVert,
-                    contentDescription = stringResource(R.string.task_action_more),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+            Box {
+                var menuOpen by remember { mutableStateOf(false) }
+                IconButton(onClick = { menuOpen = true }) {
+                    Icon(
+                        imageVector = Icons.Outlined.MoreVert,
+                        contentDescription = stringResource(R.string.task_action_more),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                DropdownMenu(
+                    expanded = menuOpen,
+                    onDismissRequest = { menuOpen = false },
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.task_action_edit)) },
+                        onClick = { menuOpen = false; callbacks.onEdit(task) },
+                        leadingIcon = { Icon(Icons.Outlined.Edit, contentDescription = null) },
+                    )
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = stringResource(R.string.task_action_delete),
+                                color = MaterialTheme.colorScheme.error,
+                            )
+                        },
+                        onClick = { menuOpen = false; callbacks.onDelete(task) },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.Delete,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.error,
+                            )
+                        },
+                    )
+                }
             }
             Icon(
                 modifier = dragHandleModifier.padding(start = 4.dp, end = 4.dp).size(20.dp),
@@ -300,7 +335,7 @@ private fun TaskRowPreview() {
                 isDragging = false,
                 callbacks = TaskTreeCallbacks(
                     onTap = {}, onToggleCompletion = {}, onToggleExpand = {},
-                    onAddSubtask = {}, onMore = {}, onReorderSiblings = { _, _ -> },
+                    onAddSubtask = {}, onEdit = {}, onDelete = {}, onReorderSiblings = { _, _ -> },
                 ),
                 dragHandleModifier = Modifier,
             )
@@ -322,7 +357,7 @@ private fun TaskRowPreview() {
                 isDragging = false,
                 callbacks = TaskTreeCallbacks(
                     onTap = {}, onToggleCompletion = {}, onToggleExpand = {},
-                    onAddSubtask = {}, onMore = {}, onReorderSiblings = { _, _ -> },
+                    onAddSubtask = {}, onEdit = {}, onDelete = {}, onReorderSiblings = { _, _ -> },
                 ),
                 dragHandleModifier = Modifier,
             )

@@ -113,6 +113,8 @@ private fun TaskDetailContent(
     var editOpen by remember { mutableStateOf(false) }
     var addSubtaskParent by remember { mutableStateOf<Long?>(null) }
     var addSubtaskOpen by remember { mutableStateOf(false) }
+    var editChildId by remember { mutableStateOf<Long?>(null) }
+    var childPendingDelete by remember { mutableStateOf<Task?>(null) }
 
     val task = state.task
 
@@ -215,7 +217,8 @@ private fun TaskDetailContent(
                             addSubtaskParent = tapped.id
                             addSubtaskOpen = true
                         },
-                        onMore = { onDeleteChild(it.id) },
+                        onEdit = { editChildId = it.id },
+                        onDelete = { childPendingDelete = it },
                         onReorderSiblings = onReorderSiblings,
                     ),
                 )
@@ -248,6 +251,26 @@ private fun TaskDetailContent(
                 parentTaskId = addSubtaskParent ?: task.id,
             ),
             onDismiss = { addSubtaskOpen = false },
+        )
+    }
+    editChildId?.let { id ->
+        TaskEditBottomSheet(
+            mode = TaskEditMode.Edit(taskId = id),
+            onDismiss = { editChildId = null },
+        )
+    }
+    childPendingDelete?.let { child ->
+        AimAlertDialog(
+            title = stringResource(R.string.task_delete_confirm_title),
+            text = stringResource(R.string.task_delete_confirm_message),
+            confirmLabel = stringResource(R.string.action_confirm),
+            dismissLabel = stringResource(R.string.action_cancel),
+            destructive = true,
+            onConfirm = {
+                onDeleteChild(child.id)
+                childPendingDelete = null
+            },
+            onDismiss = { childPendingDelete = null },
         )
     }
 }

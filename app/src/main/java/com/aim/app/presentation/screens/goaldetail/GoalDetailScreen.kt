@@ -132,7 +132,7 @@ private fun GoalDetailContent(
     var addTaskParent by remember { mutableStateOf<Long?>(null) }
     var addTaskOpen by remember { mutableStateOf(false) }
     var editTaskId by remember { mutableStateOf<Long?>(null) }
-    var taskMenuFor by remember { mutableStateOf<Task?>(null) }
+    var taskPendingDelete by remember { mutableStateOf<Task?>(null) }
     var addHabitOpen by remember { mutableStateOf(false) }
 
     val goal = state.goal
@@ -233,7 +233,8 @@ private fun GoalDetailContent(
                             addTaskParent = task.id
                             addTaskOpen = true
                         },
-                        onMore = { task -> taskMenuFor = task },
+                        onEdit = { editTaskId = it.id },
+                        onDelete = { taskPendingDelete = it },
                         onReorderSiblings = onReorderSiblings,
                     ),
                 )
@@ -299,18 +300,18 @@ private fun GoalDetailContent(
             onDismiss = { editTaskId = null },
         )
     }
-    taskMenuFor?.let { task ->
-        TaskActionsDialog(
-            task = task,
-            onDismiss = { taskMenuFor = null },
-            onEdit = {
-                editTaskId = task.id
-                taskMenuFor = null
-            },
-            onDelete = {
+    taskPendingDelete?.let { task ->
+        AimAlertDialog(
+            title = stringResource(R.string.task_delete_confirm_title),
+            text = stringResource(R.string.task_delete_confirm_message),
+            confirmLabel = stringResource(R.string.action_confirm),
+            dismissLabel = stringResource(R.string.action_cancel),
+            destructive = true,
+            onConfirm = {
                 onDeleteTask(task.id)
-                taskMenuFor = null
+                taskPendingDelete = null
             },
+            onDismiss = { taskPendingDelete = null },
         )
     }
 }
@@ -494,42 +495,4 @@ private fun GoalActionsMenu(
             leadingIcon = { Icon(Icons.Outlined.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
         )
     }
-}
-
-@Composable
-private fun TaskActionsDialog(
-    task: Task,
-    onDismiss: () -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
-) {
-    androidx.compose.material3.AlertDialog(
-        onDismissRequest = onDismiss,
-        containerColor = MaterialTheme.colorScheme.surface,
-        title = { Text(text = task.title, style = MaterialTheme.typography.titleMedium) },
-        text = {
-            Column {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.task_action_edit)) },
-                    onClick = onEdit,
-                    leadingIcon = { Icon(Icons.Outlined.Edit, contentDescription = null) },
-                )
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = stringResource(R.string.task_action_delete),
-                            color = MaterialTheme.colorScheme.error,
-                        )
-                    },
-                    onClick = onDelete,
-                    leadingIcon = { Icon(Icons.Outlined.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
-                )
-            }
-        },
-        confirmButton = {
-            androidx.compose.material3.TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.action_close))
-            }
-        },
-    )
 }
