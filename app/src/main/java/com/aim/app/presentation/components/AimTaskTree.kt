@@ -137,7 +137,6 @@ private fun TaskRow(
     } else {
         Color.Transparent
     }
-    val indentDp = (task.depth * 10).dp
 
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -146,7 +145,6 @@ private fun TaskRow(
     ) {
         Row(
             modifier = Modifier
-                .padding(start = indentDp)
                 .clip(MaterialTheme.shapes.medium)
                 .clickable { callbacks.onTap(task) }
                 .padding(horizontal = 8.dp, vertical = 4.dp),
