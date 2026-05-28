@@ -43,15 +43,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.aim.app.R
 import com.aim.app.domain.model.Task
@@ -82,6 +80,7 @@ fun AimTaskTree(
     expandedIds: Set<Long>,
     callbacks: TaskTreeCallbacks,
     modifier: Modifier = Modifier,
+    indentPerLevel: Dp = 0.dp,
 ) {
     val sourceItems = remember(roots, expandedIds) { flattenVisible(roots, expandedIds) }
     var items by remember(sourceItems) { mutableStateOf(sourceItems) }
@@ -118,6 +117,7 @@ fun AimTaskTree(
                     isDragging = isDragging,
                     callbacks = callbacks,
                     dragHandleModifier = Modifier.draggableHandle(),
+                    indentPerLevel = indentPerLevel,
                 )
             }
         }
@@ -131,6 +131,7 @@ private fun TaskRow(
     isDragging: Boolean,
     callbacks: TaskTreeCallbacks,
     dragHandleModifier: Modifier,
+    indentPerLevel: Dp = 0.dp,
     modifier: Modifier = Modifier,
 ) {
     val task = node.task
@@ -140,8 +141,7 @@ private fun TaskRow(
     } else {
         Color.Transparent
     }
-    val nestingAccent = MaterialTheme.colorScheme.outlineVariant
-    val showNestingBar = task.depth > 0
+    val indentDp = indentPerLevel * task.depth
 
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -150,16 +150,8 @@ private fun TaskRow(
     ) {
         Row(
             modifier = Modifier
+                .padding(start = indentDp)
                 .clip(MaterialTheme.shapes.medium)
-                .drawBehind {
-                    if (showNestingBar) {
-                        drawRect(
-                            color = nestingAccent,
-                            topLeft = Offset(0f, size.height * 0.2f),
-                            size = Size(2.dp.toPx(), size.height * 0.6f),
-                        )
-                    }
-                }
                 .clickable { callbacks.onTap(task) }
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
